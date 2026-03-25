@@ -63,7 +63,7 @@ Bevor der Skill-Engineer einen Ziel-Skill herausgibt, jadt er ihn im Hintergrund
 Ein Skill, der Dinge erfindet oder unbelegte Annahmen trifft, ist toxisch. Das 9. Qualitätsgate erzwingt:
 * **Tool-Validierung:** Setzt der Ziel-Skill Tools wie E-Mail-APIs voraus? Dann zwingt der Skill-Engineer den Agenten, einen Environment-Check als Schritt 1 in seinen Workflow einzubauen.
 * **Verbotene Frameworks:** Alle genannten Frameworks, APIs und Personen müssen real recherchiert sein. Fehlt ein Such-Tool, bekommen sie den Hard-Tag `<!-- UNBESTÄTIGT -->`.
-* **Vererbte Self-Correction:** Komplexere Ziel-Skills bekommen vom Engineer automatisch eine Regel injiziert, die sie zwingt, ihren eigenen Output auf Floskeln und Anglizismen zu überprüfen, bevor sie ihn dem User präsentieren.
+* **Vererbte Self-Correction:** Komplexere Ziel-Skills bekommen vom Engineer eine Regel injiziert, die sie zwingt, als letzten Schritt (Double-Check) ihren eigenen Output kritisch gegen die schärfsten Tabus und typischen Fehlerquellen *dieses spezifischen Skills* zu prüfen, bevor er an den Nutzer geht.
 
 ---
 
