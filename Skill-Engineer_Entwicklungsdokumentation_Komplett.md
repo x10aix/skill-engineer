@@ -5,16 +5,16 @@
 **Finale Version:** 3.1 (Stateful Design, Anti-Halluzination, Dedup-Prüfung)
 **Primäre Plattform:** Google Antigravity
 **Kompatibel mit:** Claude Code, Cursor, Gemini CLI, Codex CLI
-**Entwicklungszeitraum:** 25. März 2026
-**Beteiligte Systeme:** Claude Opus 4.6 (Architektur, Marktanalyse), Gemini 3 Pro / Antigravity (Reviews, Tear-Downs, Stresstests, Stateful-Weiterentwicklung), Michael (Entscheider, Qualitätsfilter)
+**Entwicklungszeitraum:** Oktober 2025 (Vorgeschichte in Gemini) — 25. März 2026 (Finalisierung)
+**Beteiligte Systeme:** Gemini 1.5 Pro / Gems (Vorgeschichte, erste Gem-Iterationen), Claude Opus 4.6 (Architektur, Marktanalyse), Gemini 3 Pro / Antigravity (Reviews, Tear-Downs, Stresstests, Stateful-Weiterentwicklung), Michael (Entscheider, Qualitätsfilter)
 
 ---
 
 ## 1. Executive Summary
 
-Der Skill Engineer ist ein Meta-Agent, der andere Agenten (Skills) entwickelt, auditiert und konfiguriert. Er entstand aus der Erkenntnis, dass bestehende Skill-Creator-Tools — von Anthropics offiziellem `skill-creator` bis zu Community-Lösungen — eine gemeinsame Schwäche teilen: Sie generieren technisch korrekte SKILL.md-Dateien, hinterfragen aber weder die strategische Qualität des Designs noch verifizieren sie die Fakten, die in den Skill einfließen.
+Der Skill Engineer ist ein Meta-Agent, der andere Agenten (Skills) entwickelt, auditiert und konfiguriert. Seine Wurzeln reichen zurück bis Oktober 2025, als in Gemini ein "KI-Architekt" Gem entworfen wurde — ein Interview-basierter Prompt-Generator für Gems und GPTs. Über mehrere Versionen zeigte sich ein wiederkehrendes Muster: Jede neue Version eines Gems wurde zunächst schlechter als die vorherige, weil gewonnene Erkenntnisse nicht systematisch festgehalten wurden. Dieses Problem führte zur Destillation der "10 Gebote des Prompt-Designs" und letztlich zum Entschluss, den gesamten Ansatz in ein plattformübergreifendes, strukturiertes SKILL.md-Format zu überführen.
 
-Der Entwicklungsprozess war bewusst multi-perspektivisch und adversarial angelegt: Claude baute die Grundarchitektur und führte die Marktanalyse durch, Gemini/Antigravity attackierte den Entwurf in mehreren Review-Zyklen und entwickelte ihn nach Übergabe autonom weiter, Michael filterte als Entscheider, welche Kritik substanziell war und welche nicht.
+Der Entwicklungsprozess war bewusst multi-perspektivisch und adversarial angelegt: Gemini lieferte die erste Vorarbeit und die iterativen Learnings aus realen Gem-Builds, Claude baute die Grundarchitektur für Antigravity und führte die Marktanalyse durch, Gemini/Antigravity attackierte den Entwurf in mehreren Review-Zyklen und entwickelte ihn nach Übergabe autonom weiter, Michael filterte als Entscheider, welche Kritik substanziell war und welche nicht.
 
 Ausgehend von einem statischen 4-Phasen-Wasserfall-Modell (Interview → Strategie → Output → Qualitätsgate) entwickelte sich das System durch harte Adversarial Reviews, Marktanalysen und operative Stresstests zu einer Agenten-Architektur-Engine mit drei Alleinstellungsmerkmalen, die kein anderer der 16+ recherchierten Skill-Creator im Markt besitzt:
 
@@ -30,7 +30,62 @@ Die bahnbrechendsten Durchbrüche im Verlauf der Entwicklung waren der Bypass f�
 
 ## 2. Der ausführliche Entwicklungsprozess
 
-### 2.1 Ausgangslage: Ein Gemini-Gem und seine Grenzen
+### 2.0 Vorgeschichte: Die Gemini-Ära (Oktober 2025)
+
+Bevor der Skill Engineer als SKILL.md für Antigravity existierte, durchlief die zugrundeliegende Idee mehrere Iterationszyklen in Google Gemini. Diese Vorgeschichte ist entscheidend, weil sie die Probleme offenlegte, die den Skill Engineer in seiner heutigen Form motiviert haben.
+
+#### Der Ursprung: Ein "KI-Architekt" Gem für Gems und GPTs
+
+Die erste Inkarnation war ein Gemini Gem namens "KI-Architekt" — ein Interview-basierter Prompt-Generator, der durch einen 10-Fragen-Prozess (Plattform, Grundidee, Rolle, Ziel, Zielgruppe, Aufgaben, Wissensbasis, Output-Format, Tabus, Stil) die Konfigurationsanweisungen für neue Gems oder GPTs erstellen sollte. Er konnte zwischen Google-Gem- und OpenAI-GPT-Templates unterscheiden und produzierte strukturierte Ausgaben.
+
+Der KI-Architekt war eingebettet in ein größeres Ökosystem, das auf einer "System-Blaupause" basierte — einem Master-Dokument, das die Architektur des gesamten KI-Workflows beschrieb (Google Drive als Archiv, Notion als Steuerzentrale, Gemini Gems als Agenten). Neben dem KI-Architekten existierten spezialisierte Gems wie ein Archivar, ein Workflow-Booster, ein Visual Concept Assistent und ein System-Bibliothekar zur Pflege des Master-Dokuments.
+
+#### Das Qualitätsproblem: Gems wurden bei jeder Version schlechter
+
+Das zentrale Problem, das sich über mehrere Iterationszyklen zeigte: Jedes Mal, wenn ein Gem überarbeitet wurde — ob der KI-Architekt selbst oder die von ihm generierten Gems — wurde die neue Version zunächst schlechter als die vorherige. Die Ursachen waren systemisch:
+
+**Starres Interview statt Dual-Mode.** Der KI-Architekt kannte nur einen Weg: das vollständige 10-Fragen-Interview. Wenn Michael bereits einen ausformulierten Textblock mit einer Idee einfügte, ignorierte der Gem diesen Kontext und fragte alle Fragen von vorn ab. Das Problem wurde dreimal identifiziert und dreimal in neuen Versionen "gelöst", wobei die Lösung (Dual-Mode mit Verhaltenssteuerung) erst im dritten Anlauf stabil funktionierte.
+
+**Qualitätsverlust durch Vereinfachung.** Wenn neue Features eingebaut wurden (z.B. Dual-Mode-Fähigkeit), ging dabei regelmäßig die Detailtiefe der bestehenden Features verloren. Das Gemini-LLM (und Michael in seinen Anweisungen) konzentrierte sich auf das Neue und vergaß, die bestehende Struktur vollständig zu übernehmen. Der Archivar-Gem durchlief drei Versionen (v1.0: nur Podcasts, v2.0: Dual-Typ mit schwacher Struktur, v3.0/3.2: vollständige Struktur mit Fallback), wobei jede Version zuerst einen Rückschritt bedeutete.
+
+**"Formular-Ausfüller" statt "Meister-Interviewer".** Der KI-Architekt v1.0 und v2.0 stellte oberflächliche Fragen ("Was ist die Aufgabe?"), aber nicht die strategischen Fragen, die einen guten Prompt ausmachen. Michael bemerkte, dass ein freier Chat mit Gemini bessere GPTs produzierte als sein eigens dafür gebauter Gem. Die Erkenntnis: Der Gem agierte wie ein Bürokrat, der ein Formular ausfüllt, statt wie ein Sparringspartner, der das "Warum" hinter dem "Was" versteht. Das führte zur v3.0 mit "Socratic Design Dialogue".
+
+**Inkonsistente Nummerierung und Strukturfehler.** Markdown-Hierarchie-Fehler (falsche Überschriftenebenen, inkonsistente Nummerierung zwischen Chat-Kontext und Master-Dokument) führten zu Verwirrung. Der System-Bibliothekar Gem schlug vor, einen neuen Workflow unter "Punkt 4" (Prozesse) einzuordnen, obwohl er strategisch unter "Punkt 5" (System-Pflege) gehörte. Gemini verwendete in verschiedenen Chat-Nachrichten widersprüchliche Punktnummerierungen. Diese Fehler zwangen Michael in eine permanente Kontrolleur-Rolle.
+
+**Keine persistierte Wissensbasis für Design-Prinzipien.** Die hart erarbeiteten Erkenntnisse aus jeder Iteration existierten nur im Chat-Verlauf, nicht in einem systematisch abrufbaren Dokument. Wenn ein neuer Gem gebaut wurde, startete der Prozess effektiv bei Null, weil die Learnings nirgends kodifiziert waren.
+
+#### Die "10 Gebote des Prompt-Designs"
+
+Das kumulative Ergebnis dieser Probleme war die Destillation aller Erkenntnisse in ein explizites Regelwerk — die "10 Gebote des Prompt-Designs":
+
+1. **Spezifische Rolle** — Klar definierte Identität statt "sei hilfreich".
+2. **Duale Modi** — Interview UND Analyse-Fähigkeit, gesteuert durch Verhaltenslogik.
+3. **Sokratischer Dialog** — "Warum"-Fragen statt "Was"-Fragen.
+4. **Strikte Ausgabeformate** — XML-Tags oder Markdown-Templates, keine freie Prosa.
+5. **Proaktives Mitdenken** — Eigenständige Verbesserungsvorschläge.
+6. **Definierter Fallback** — Verhalten bei unbekanntem Input, statt raten.
+7. **Lernen durch Beispiele** — Positiv- und Negativbeispiele für Stil und Qualität.
+8. **Verfassung** — Unumstößliche Regeln, die allen anderen Anweisungen übergeordnet sind.
+9. **Klare Hierarchie** — Saubere Markdown-Struktur für zuverlässige LLM-Interpretation.
+10. **Kontinuierliche Wartung** — Gem-TÜV, Versionierung, Lifecycle-Management.
+
+Dieses Regelwerk wurde als "Gem-Bauplan v1.0" in der Wissensdatenbank verankert und sollte als SSoT (Single Source of Truth) dienen, die der KI-Architekt bei jedem neuen Gem-Build konsultiert.
+
+#### Die Erkenntnis, die zum Skill Engineer führte
+
+Trotz des Gem-Bauplans blieb ein fundamentales Problem bestehen: Das Regelwerk existierte als externes Dokument, das dem Gem manuell mitgegeben werden musste. Es war nicht in den Gem selbst eingebaut. Jeder neue Chat mit dem KI-Architekten erforderte, dass Michael den gesamten Gem-Bauplan als Kontext einfügte. Das war fehleranfällig, token-intensiv und skalierte nicht.
+
+Gleichzeitig wurde Google Antigravity als agent-first IDE veröffentlicht (November 2025), mit einem nativen SKILL.md-System, das genau dieses Problem löst: Skills werden als Dateien im Dateisystem gespeichert, automatisch geladen wenn relevant, und können Scripts, References und Templates als Begleitdateien mitführen. Die Design-Prinzipien müssen nicht mehr manuell in jeden Chat kopiert werden — sie sind Teil des Skills selbst.
+
+Michaels Entscheidung, den KI-Architekten von einem Gemini-Gem in einen Antigravity-Skill umzubauen, war der Übergang von der Vorgeschichte zur eigentlichen Entwicklung des Skill Engineers.
+
+#### Michaels Metakritik aus der Gemini-Ära
+
+Ein besonders relevantes Learning aus der Gemini-Phase war Michaels explizite Frustration mit der Fehleranfälligkeit: "Es kommen ständig kleine Fehler vor. Es ist wie bei einem Mitarbeiter dem ich ständig auf die Finger schauen muss." Geminis Antwort darauf war die Unterscheidung zwischen "Pilot" und "Manager" — die KI ist ein Autopilot, der 90% beschleunigt, aber die letzten 10% (strategische Steuerung, Qualitätskontrolle, finale Abnahme) bleiben beim Menschen.
+
+Diese Einsicht floss direkt in das Design des Skill Engineers ein: Das transparente Qualitätsgate (statt heimlichem Fixen), die Nutzer-Bestätigungsschritte in Modus C, und die Anti-Generik-Regel sind direkte Konsequenzen aus der Erfahrung, dass LLMs zwar logisch korrekt, aber nicht strategisch weise agieren.
+
+### 2.1 Ausgangslage: Das Gem-Template wird zu Claude gebracht
 
 Der Ausgangspunkt war ein existierender System-Prompt für Google Gemini Gems — ein Template namens "Skill Engineer", das Teil eines größeren KI-Ökosystems war. Dieses Ökosystem basierte auf einer "System-Blaupause v1.0", einem Google-Drive-Dokument, das eine Drei-Säulen-Architektur beschrieb: Google Drive als Archiv, Notion als Steuerzentrale, Gemini Gems als KI-Agenten.
 
@@ -185,6 +240,14 @@ Diese Regel wurde kurz darauf plattformagnostisch nachgeschärft: Um zu verhinde
 
 | # | Version | Schritt | Auslöser | System | Learning |
 |---|---------|---------|----------|--------|----------|
+| 0a | — | Erster "KI-Architekt" Gem (10-Fragen-Interview) | Wunsch nach einem Werkzeug, das andere Werkzeuge baut | Gemini | Ein Meta-Agent, der andere Agenten baut, ist die logische Konsequenz eines wachsenden Gem-Ökosystems. Aber ein Interview-basierter Generator ohne Dual-Mode ist zu starr. |
+| 0b | — | Dual-Mode-Problem dreimal identifiziert und "gelöst" | Gem ignoriert eingefügten Textblock, fragt alles von vorn | Gemini + Michael | Wenn ein Fix dreimal implementiert werden muss, ist das Problem nicht die Implementierung, sondern die fehlende Persistierung der Erkenntnis. |
+| 0c | — | Gems werden bei jeder Version schlechter | Neue Features eingebaut, bestehende Struktur geht verloren | Gemini | Qualitätsverlust durch Vereinfachung ist das häufigste Problem bei iterativer Prompt-Entwicklung. Jede neue Version muss gegen die vorherige auditiert werden. |
+| 0d | — | "Formular-Ausfüller vs. Meister-Interviewer" erkannt | Freier Chat produziert bessere GPTs als der dafür gebaute Gem | Michael | Ein Gem, der nur "Was"-Fragen stellt, ist ein Bürokrat. Der Socratic Design Dialogue ("Warum"-Fragen) macht den Unterschied. |
+| 0e | — | Inkonsistente Nummerierung / Strukturfehler | System-Bibliothekar ordnet Workflow falsch ein, Gemini widerspricht sich | Gemini + Michael | LLMs optimieren auf logische Korrektheit, nicht auf strategische Weisheit. Der Mensch muss der Strategie-Entscheider bleiben. |
+| 0f | — | "10 Gebote des Prompt-Designs" destilliert | Kumulierte Frustration über wiederkehrende Fehler | Michael + Gemini | Die hart erarbeiteten Erkenntnisse aus Iterationszyklen müssen explizit als Regelwerk kodifiziert werden, sonst gehen sie bei jeder neuen Version verloren. |
+| 0g | — | Pilot-vs.-Manager-Mindset etabliert | Michaels explizite Frustration: "Es ist wie bei einem Mitarbeiter dem ich ständig auf die Finger schauen muss" | Gemini + Michael | Die KI ist ein Autopilot, kein Mitarbeiter. Fehler sind erwartbar und eingeplant. Der Mensch ist Pilot (strategische Steuerung + finale Abnahme), nicht Manager (Delegation + Hoffnung). |
+| 0h | — | Entscheidung: Gem → Antigravity SKILL.md | Antigravity-Release (Nov 2025), SKILL.md als universeller Standard | Michael | Ein Gem-Bauplan als externes Dokument, das manuell in jeden Chat kopiert werden muss, skaliert nicht. SKILL.md löst das Problem auf Plattformebene. |
 | 1 | — | Analyse des Original-Gem-Templates | Michael liefert Gemini-Gem zur Bewertung | Claude | Ein Template, das mehrere Plattformen abdecken will ohne zu differenzieren, bedient keine davon optimal. |
 | 2 | — | Klärungsfragen zu Antigravity und System-Blaupause | Claude braucht Plattform-Kontext | Claude | Die Halluzinations-Anfälligkeit bei Personen/Frameworks ist ein reales, dokumentiertes Problem — nicht ein theoretisches Risiko. |
 | 3 | — | Antigravity-Recherche | Unbekannte Plattform verstehen | Claude | SKILL.md hat sich als universeller Open Standard für 20+ Plattformen etabliert. Ein Skill für Antigravity funktioniert mit minimalen Anpassungen überall. |
