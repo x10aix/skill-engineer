@@ -1,7 +1,15 @@
 # Skill-Engineer: Architektur & Funktionsweise
 
-**Version:** 3.0 (mit Stateful Design & Anti-Halluzination)
-**Pfad:** `C:\Users\drxle\.gemini\antigravity\skills\skill-engineer\SKILL.md`
+**Version:** 3.1 (Stateful Design, Native XML-Tags, Anti-Halluzination)
+
+⚠️ **CRITICAL WARNING:** This Skill is designed EXCLUSIVELY for Agent-First IDEs with file-system access (Antigravity, Cursor, Claude Code). Do **NOT** use in generic Web-Chats (ChatGPT, Claude.ai, Gemini Advanced). The core "Stateful Setup Phase" requires local write permissions to physically rewrite the `SKILL.md` file.
+
+## Supported Platforms (Profiles)
+- **Google Antigravity:** Native Support. (Perfect match for YAML-Frontmatter & Progressive Disclosure).
+- **Cursor IDE:** Native Support. (Agents correctly read XML tags and execute the 4-Phase routing).
+- **Claude Code / Root CLIs:** Native Support. (The Dedup-Scan is restricted to local queries to prevent runaway `find /` commands).
+
+---
 
 Der *Skill-Engineer* ist ein Meta-Agent. Er dient nicht dazu, dem Endnutzer direkt bei einer Fachaufgabe zu helfen, sondern er entwickelt, auditiert und konfiguriert andere Agenten (Skills). Er zwingt das zugrundeliegende LLM zu methodischer Strenge, eliminiert generische Floskeln und verhindert "Yes-Man"-Verhalten.
 
