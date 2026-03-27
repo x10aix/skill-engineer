@@ -15,11 +15,12 @@ Dieser Workflow bereitet den Skill-Engineer für einen Release vor, indem er die
    ```
 
 3. **Sehr wichtig:** Prüfe vor dem Commit, ob es neue Einträge in der Datei `CHANGELOG.de.md` gibt, die noch nicht in der englischen `CHANGELOG.md` stehen. Wenn ja, übersetze diese selbstständig im besten Entwickler-Englisch und trage sie in die `CHANGELOG.md` ein.
-4. Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v3.2").
-5. Formatiere den Commit und führe aus:
+4. **Sicherheits-Check (Data Leak Prevention):** Durchsuche eigenständig alle Dateien, die für den Commit markiert sind (insbesondere in `references/` oder `examples/`), auf **interne Daten**. Suche nach: echten API-Keys, echten Server-IPs, internen Hostnamen (z.B. `intern.x10aix.tech`), echten E-Mail-Adressen, Passwörtern oder Kundennamen. Wenn du interne oder sensible Daten findest, **BLOCKIERE** den Push sofort und warte auf Anweisungen!
+5. Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v3.2").
+6. Formatiere den Commit und führe aus:
    ```powershell
    git add .
    git commit -m "[Hier die Nutzer-Nachricht einfügen]"
    git push
    ```
-6. Gib eine Erfolgsmeldung aus, dass das Projekt inklusive synchronisierter Changelogs veröffentlicht wurde!
+7. Gib eine Erfolgsmeldung aus, dass das Projekt inklusive synchronisierter Changelogs veröffentlicht wurde!
