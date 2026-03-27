@@ -5,6 +5,9 @@ Dieses Dokument verfolgt den strukturierten Versionsverlauf des Skill-Engineers 
 ---
 
 ### [Latest] März 27, 2026
+**Commits: Claude's Feedback & Final Polish**
+* `tbd` - **feat**: Feinjustierung des Qualitätsgates (Re-Integration von Triggering- und Referenzprüfungen), klarere Definition der C-Audit/C-Edit-Trennung sowie die Einführung einer externen `anti-hallucination-checklist.md` unter Einhaltung des Progressive-Disclosure-Prinzips.
+
 **Commits: Internationalisierung & Workflow-Automatisierung**
 * `212a6f3` - **feat**: Übersetzung von `README.md` und `SKILL.md` auf Englisch für die globale Open-Source Community. Die ursprünglichen deutschen Versionen sind weiter als `*.de.md` verfügbar und über Badges verlinkt.
 * `212a6f3` - **feat**: Einführung des `.agents/workflows/publish.md` Antigravity-Workflows. Dieser automatisiert den Release-Prozess, indem er lokal geänderte `<configuration>`-Blöcke vor jedem Push sicher auf `UNCONFIGURED` (Werkseinstellungen) zurücksetzt.
