@@ -14,11 +14,12 @@ Dieser Workflow bereitet den Skill-Engineer für einen Release vor, indem er die
    (Get-Content SKILL.de.md) -replace 'STATUS: CONFIGURED', 'STATUS: UNCONFIGURED' -replace 'Zielplattform:.*', 'Zielplattform: N/A' -replace 'Ziel-LLM:.*', 'Ziel-LLM: N/A' -replace 'Ziel-Nutzer:.*', 'Ziel-Nutzer: N/A' -replace 'Sprache:.*', 'Sprache: N/A' | Set-Content SKILL.de.md
    ```
 
-3. Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v3.2").
-4. Formatiere den Commit und führe aus:
+3. **Sehr wichtig:** Prüfe vor dem Commit, ob es neue Einträge in der Datei `CHANGELOG.de.md` gibt, die noch nicht in der englischen `CHANGELOG.md` stehen. Wenn ja, übersetze diese selbstständig im besten Entwickler-Englisch und trage sie in die `CHANGELOG.md` ein.
+4. Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v3.2").
+5. Formatiere den Commit und führe aus:
    ```powershell
    git add .
    git commit -m "[Hier die Nutzer-Nachricht einfügen]"
-   git push origin main
+   git push
    ```
-5. Gib eine Erfolgsmeldung aus, dass das Projekt veröffentlicht wurde!
+6. Gib eine Erfolgsmeldung aus, dass das Projekt inklusive synchronisierter Changelogs veröffentlicht wurde!
