@@ -1,6 +1,6 @@
 # Skill-Engineer: Architektur & Funktionsweise
 
-**Version:** 3.1 (Stateful Design, Native XML-Tags, Anti-Halluzination)
+**Version:** 4.0 (Ecosystem-Aware Design, Cross-Skill Delegation, Mermaid-Entscheidungsbäume)
 
 🇬🇧 [Read in English](README.md)
 
@@ -31,51 +31,67 @@ Der Skill-Engineer ist ein **Stateful Agent**. Er besitzt einen `<configuration>
 
 ---
 
-## 2. Der Umgebungs-Scan (Dedup-Prüfung)
-Bevor der Agent mit der Generierung beginnt, durchsucht er den aktuellen Projekt-Workspace und das globale Tools-Verzeichnis.
-* Findet er bereits einen thematisch ähnlichen Skill (z.B. einen bestehenden `csv-converter`), pausiert er.
-* Er gibt eine kurze Gegenüberstellung aus und stellt die **Stand-Alone Dedup-Frage**: *"Sollen wir den existierenden Skill editieren (Modus C), ihn klonen/anpassen, oder komplett neu starten?"*
-* Dies verhindert unkontrolliertes Skill-Wachstum und Redundanz.
+## 2. Ökosystem-Mapping & Dedup-Prüfung *(Neu in v4.0)*
+Bevor der Agent mit der Generierung beginnt, führt er eine zweistufige Analyse durch:
+* **Dedup-Scan:** Prüft, ob ein thematisch ähnlicher Skill bereits existiert. Falls ja, pausiert er und fragt, ob editiert (Modus C), geklont oder neu gestartet werden soll.
+* **Ökosystem-Mapping:** Scannt ALLE existierenden Skills im Workspace und identifiziert: (a) **Delegations-Partner** — Skills, an die der neue Skill Teilaufgaben abgeben soll, (b) **Konflikte** — Skills mit überlappenden Triggern, (c) **Neutral** — keine Interaktion. Dies verhindert sowohl Redundanz als auch monolithische Überfrachtung.
+* **Benchmark-Scan (Optional):** Für komplexe Skills kann der Agent externe Lösungen recherchieren, um Must-Have-Features und USPs zu identifizieren.
 
 ---
 
-## 3. Die 4 Betriebs-Modi (Input-Routing)
+## 3. Die 5 Betriebs-Modi (Input-Routing)
 Gibt es kein Dedup-Problem (oder der Nutzer wünscht explizit einen Neubau), greift das intelligente Routing:
 
-1. **Modus A (Leere Leinwand):** Der Nutzer hat nur eine grobe Idee. Der Agent startet das vollständige 7-Fragen-Interview.
-2. **Modus B (Vorarbeit vorhanden):** Der Nutzer liefert ein Dokument (z.B. Company Guidelines). Der Agent führt eine harte **Gap-Analyse** durch. Zeigt der Nutzer Floskeln ("Zielgruppe: Alle"), weist der Agent das als ungültig ab und hakt nach, bis die genaue funktionale Mechanik geklärt ist.
+1. **Modus A (Leere Leinwand):** Der Nutzer hat nur eine grobe Idee. Der Agent startet das vollständige 10-Fragen-Interview.
+2. **Modus B (Vorarbeit vorhanden):** Der Nutzer liefert einen Skill-Entwurf. Der Agent führt eine harte **Gap-Analyse** durch.
 3. **Modus C (Audit / Edit):** Für bestehende Skills.
-   * **C-Audit:** Der Agent prüft einen Alt-Skill gegen das 9-Punkte-Qualitätsgate und legt einen Report vor, bevor er den Code anfasst.
-   * **C-Edit:** Der Agent führt eine definierte Detailänderung in einer Alt-Datei sofort aus (z.B. "Füge Regel X hinzu") und prüft nur den geänderten Bereich.
-4. **Modus D (Quick Draft):** Der Bypass. Wenn der Skill trivial ist (z.B. ein reines Werkzeug wie "Formatierer für Git-Commits"), überspringt der Agent das Interview und die Persona-Definition komplett und wirft sofort ein Light-Template aus.
+   * **C-Audit:** Der Agent prüft einen Alt-Skill gegen das 13-Punkte-Qualitätsgate und legt einen Report vor.
+   * **C-Edit:** Der Agent führt eine definierte Detailänderung sofort aus und prüft nur den geänderten Bereich.
+4. **Modus D (Quick Draft):** Triviale Werkzeug-Skills überspringen das Interview — sofortiges Light-Template.
+5. **Modus E (Regeneration):** *(Neu in v4.0)* Ein ausführliches Planungsdokument, Strategiepapier, Prozessdokument, SOP oder eine Wissensbasis existiert, aber keine SKILL.md. Der Agent liest das Legacy-Dokument, extrahiert Kernfunktionen, Workflows, Regeln und Tabus und übersetzt sie in die SKILL.md-Architektur. Unterschied zu Modus B: Modus B hat einen *Skill-Entwurf*. Modus E hat *Domänenwissen in unstrukturierter Form*.
 
 ---
 
 ## 4. Adversarial Validation (Self-Doubt)
 Der Skill-Engineer ist programmiert, sich nicht sofort zufrieden zu geben.
 Bevor er in Phase 3 den finalen Skill generiert (Strategie-Vorschlag), muss er zwingend einen **Gegeneinwand (Veto)** gegen seinen eigenen Ansatz formulieren. 
-Gibt es keine logische Schwachstelle, muss er stattdessen den gefährlichsten operativen **Edge Case** benennen, an dem der zukünftige Ziel-Skill voraussichtlich scheitern könnte.
+Gibt es keine logische Schwachstelle, muss er stattdessen den gefährlichsten operativen **Edge Case** benennen.
 
 ---
 
-## 5. Das 9-Punkte-Qualitätsgate
-Bevor der Skill-Engineer einen Ziel-Skill herausgibt, jadt er ihn im Hintergrund (oder im Audit reportiert an den Nutzer) durch diese Checkliste:
+## 4b. Cross-Skill Delegation *(Neu in v4.0)*
+Wenn das Interview identifiziert, dass Teilaufgaben von bestehenden Skills besser gelöst werden können, injiziert der Engineer ein **Delegations-Muster** in den generierten Skill:
+* Eine `NIEMALS ... delegiere an [skill-name]` Regel in `<operational_rules>` mit einem standardisierten Briefing-Template.
+* Eine erwartete Rückgabe-Format-Spezifikation.
+* Einen korrespondierenden Schritt im `<process_workflow>`, an dem die Delegation stattfindet.
 
-1. Keine Floskeln ("Du bist ein Experte")
-2. Mechanik statt Adjektive (Positiv- und Negativ-Beispiele statt dem Wort "hilfreich")
-3. Tabus vorhanden
-4. Workflow ausführbar
-5. Beispiel (Few-Shot) vorhanden
-6. Triggering präzise definiert
-7. Plattform-Konformität (YAML-Frontmatter etc.)
-8. Referenzen validiert
-9. **Anti-Halluzination by Design** *(Neu)*
+Beispiel: Der `google-ads-manager` Skill delegiert Copywriting an `ad-expert` und Brand-Checks an `brand-guidelines`.
 
-### Deep-Dive: Die Anti-Halluzinations-Mechanik
-Ein Skill, der Dinge erfindet oder unbelegte Annahmen trifft, ist toxisch. Das 9. Qualitätsgate erzwingt:
-* **Tool-Validierung:** Setzt der Ziel-Skill Tools wie E-Mail-APIs voraus? Dann zwingt der Skill-Engineer den Agenten, einen Environment-Check als Schritt 1 in seinen Workflow einzubauen.
-* **Verbotene Frameworks:** Alle genannten Frameworks, APIs und Personen müssen real recherchiert sein. Fehlt ein Such-Tool, bekommen sie den Hard-Tag `<!-- UNBESTÄTIGT -->`.
-* **Vererbte Self-Correction:** Komplexere Ziel-Skills bekommen vom Engineer eine Regel injiziert, die sie zwingt, als letzten Schritt (Double-Check) ihren eigenen Output kritisch gegen die schärfsten Tabus und typischen Fehlerquellen *dieses spezifischen Skills* zu prüfen, bevor er an den Nutzer geht.
+---
+
+## 5. Das 13-Punkte-Qualitätsgate *(Erweitert in v4.0)*
+Bevor der Skill-Engineer einen Ziel-Skill herausgibt, jagt er ihn durch diese Checkliste (maximal 13 Punkte in 4 Kategorien):
+
+### A. Architektonische Reinheit (0–3 Punkte)
+1. Native XML-Tags (keine Prosa-Anweisungen)
+2. Mechanik statt Adjektive
+3. Plattform-agnostisches Format (YAML-Frontmatter)
+
+### B. Anti-Halluzination & Sicherheit (0–4 Punkte)
+4. Environment-Check in Schritt 1
+5. Self-Correction / Chain-of-Thought injiziert
+6. Explizite Tabu-Liste
+7. Unbestätigte Referenzen mit `<!-- UNBESTÄTIGT -->` markiert
+
+### C. Developer Experience (0–3 Punkte)
+8. Zero-Shot Triggering-Präzision
+9. Few-Shot Beispiel enthalten
+10. Stateful/Stateless Korrektheit
+
+### D. Ökosystem-Integration & Wartbarkeit (0–3 Punkte) *(Neu in v4.0)*
+11. **Cross-Skill-Delegation:** Teilaufgaben an spezialisierte Nachbar-Skills delegiert mit Briefing- + Rückgabeformat.
+12. **Referenz-Qualität:** Jede Reference-Datei eigenständig nutzbar, unter 200 Zeilen, Mermaid für Entscheidungsbäume mit ≥3 Verzweigungen.
+13. **Update-Fähigkeit:** Dynamische Reference-Dateien (Inventare, Listen) enthalten Datum, Pflegeregeln und Status-Tracking.
 
 ---
 

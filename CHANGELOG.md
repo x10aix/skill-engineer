@@ -4,7 +4,23 @@ This document tracks the structured version history of the Skill-Engineer based 
 
 ---
 
-### [Latest] March 27, 2026
+### [Latest] April 13, 2026
+**Version 4.0 — "Ecosystem-Aware" Update**
+
+Seven practice-derived improvements based on real-world observations during the creation of the `google-ads-manager` skill. The Skill-Engineer now understands skill ecosystems, not just individual skills.
+
+* `5e5ffdc` - **feat**: **Mode E (Regeneration)** — Transform existing planning documents, SOPs, process documents, or knowledge bases into production-ready SKILL.md packages. Key difference from Mode B: Mode E handles *unstructured domain knowledge*, not skill drafts.
+* `5e5ffdc` - **feat**: **Ecosystem Mapping** in Phase 0 — The agent now scans ALL existing skills in the workspace to identify delegation partners, trigger conflicts, and neutral relationships before creating a new skill.
+* `5e5ffdc` - **feat**: **Benchmark Scan** (Phase 0.5, optional) — For complex skills, the agent can research external solutions (SaaS tools, open-source skills, prompt templates) to identify must-have features and USPs.
+* `5e5ffdc` - **feat**: **Cross-Skill Delegation Pattern** in Phase 3 — When a skill delegates sub-tasks to another skill, the Engineer now injects a standardized briefing/return-format pattern into the generated `<operational_rules>`.
+* `5e5ffdc` - **feat**: **Interview expanded to 10 metrics** (from 8) — Metric 8 split into Static (8a) vs. Dynamic References (8b) with distinct design rules. New Metric 9: Delegation. New Metric 10: Benchmark Gaps.
+* `5e5ffdc` - **feat**: **Quality Gate extended** with 3 new checks: Ecosystem Integration, Reference Quality (max 200 lines, Mermaid for decision trees ≥3 branches), and Diagram Quality.
+* `5e5ffdc` - **docs**: New reference file `references/reference-templates.md` with 5 scaffolding patterns (Decision Tree/Mermaid, Dynamic Inventory, Checklist, Workflow, Static Reference).
+* `5e5ffdc` - **feat**: **Evaluation Schema** expanded to 13 points (from 10) with new Kategorie D: Ecosystem Integration & Maintainability. 4th regression test added for Mode E.
+
+---
+
+### March 27, 2026
 **Commits: Claude's Feedback & Final Polish**
 * `tbd` - **feat**: Fine-tuning of the Quality Gate (re-integration of triggering and reference checks), clearer definition of the C-Audit/C-Edit separation, and the introduction of an external `anti-hallucination-checklist.md` while adhering to the Progressive Disclosure principle.
 

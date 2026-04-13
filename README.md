@@ -1,6 +1,6 @@
 # Skill-Engineer: Architecture & Core Mechanics
 
-**Version:** 3.1 (Stateful Design, Native XML-Tags, Anti-Hallucination)
+**Version:** 4.0 (Ecosystem-Aware Design, Cross-Skill Delegation, Mermaid Decision Trees)
 
 🇩🇪 [Lies dies auf Deutsch](README.de.md)
 
@@ -31,23 +31,24 @@ The Skill-Engineer is a **Stateful Agent**. It maintains a `<configuration>` blo
 
 ---
 
-## 2. Environment Scan (Dedup Check)
-Before the agent starts generating, it scans the current project workspace and the global tools directory.
-* If it finds an already existing, thematically similar skill (e.g., an existing `csv-converter`), it pauses.
-* It outputs a brief comparison and poses the **Stand-Alone Dedup Question**: *"Should we edit the existing skill (Mode C), clone/adapt it, or start completely from scratch?"*
-* This prevents uncontrolled skill bloat and redundancy.
+## 2. Ecosystem Mapping & Dedup Check *(New in v4.0)*
+Before the agent starts generating, it performs a two-step analysis:
+* **Dedup Scan:** Checks if a thematically similar skill already exists. If found, it pauses and asks whether to edit (Mode C), clone, or rebuild from scratch.
+* **Ecosystem Mapping:** Scans ALL existing skills in the workspace and identifies: (a) **Delegation Partners** — skills the new skill should call for sub-tasks, (b) **Conflicts** — skills with overlapping triggers, (c) **Neutral** — no interaction. This prevents both redundancy and monolithic bloat.
+* **Benchmark Scan (Optional):** For complex skills, the agent can research external solutions to identify must-have features and USPs.
 
 ---
 
-## 3. The 4 Operating Modes (Input Routing)
+## 3. The 5 Operating Modes (Input Routing)
 If there is no duplication issue (or the user explicitly requests a rebuild), the intelligent routing takes over:
 
-1. **Mode A (Blank Canvas):** The user only has a rough idea. The agent initiates the full 7-question interview.
-2. **Mode B (Existing Draft):** The user provides a document (e.g., Company Guidelines). The agent performs a hard **Gap Analysis**. If the user provides empty phrases ("Target Audience: Everyone"), the agent rejects this as invalid and insists until the precise functional mechanics are clarified.
+1. **Mode A (Blank Canvas):** The user only has a rough idea. The agent initiates the full 10-question interview.
+2. **Mode B (Existing Draft):** The user provides a skill draft. The agent performs a hard **Gap Analysis**.
 3. **Mode C (Audit / Edit):** For existing skills.
-   * **C-Audit:** The agent evaluates a legacy skill against the 9-point Quality Gate and presents a report before touching the code.
-   * **C-Edit:** The agent executes a defined detail change within a legacy file immediately (e.g., "Add Rule X") and only validates the modified section.
-4. **Mode D (Quick Draft):** The bypass. If the skill is trivial (e.g., a pure utility like "Git Commit Formatter"), the agent skips the interview and persona definition completely, instantly outputting a light template.
+   * **C-Audit:** The agent evaluates a legacy skill against the 13-point Quality Gate and presents a report.
+   * **C-Edit:** The agent executes a defined detail change immediately and validates only the modified section.
+4. **Mode D (Quick Draft):** Trivial utility skills skip the interview — instant light template.
+5. **Mode E (Regeneration):** *(New in v4.0)* An extensive planning document, strategy paper, process document, SOP, or knowledge base exists, but no SKILL.md. The agent reads the legacy document, extracts core functions, workflows, rules and taboos, and translates them into the SKILL.md architecture. Key difference from Mode B: Mode B has a *skill draft*. Mode E has *domain knowledge in unstructured form*.
 
 ---
 
@@ -58,24 +59,39 @@ If no logical flaw exists, it must instead identify the most dangerous operation
 
 ---
 
-## 5. The 9-Point Quality Gate
-Before the Skill-Engineer releases a target skill, it silently forces it (or reports it to the user during an audit) through this checklist:
+## 4b. Cross-Skill Delegation *(New in v4.0)*
+When the Interview identifies that sub-tasks could be handled by existing skills, the Engineer injects a **Delegation Pattern** into the generated skill:
+* A `NEVER ... delegate to [skill-name]` rule in `<operational_rules>` with a standardized briefing template.
+* An expected return format specification.
+* A corresponding step in `<process_workflow>` where the delegation occurs.
 
-1. No fluff ("You are an expert")
-2. Mechanics over Adjectives (positive and negative examples instead of the word "helpful")
-3. Taboos defined
-4. Workflow executable
-5. Example (Few-Shot) provided
-6. Triggering precisely defined
-7. Platform conformity (YAML-Frontmatter, etc.)
-8. References validated
-9. **Anti-Hallucination by Design** *(New)*
+Example: The `google-ads-manager` skill delegates copywriting to `ad-expert` and brand checks to `brand-guidelines`.
 
-### Deep-Dive: The Anti-Hallucination Mechanic
-A skill that invents facts or makes unfounded assumptions is toxic. The 9th Quality Gate enforces:
-* **Tool Validation:** Does the target skill require tools like Email APIs? If so, the Skill-Engineer forces the agent to inject an Environment Check as Step 1 into its workflow.
-* **Forbidden Frameworks:** All referenced frameworks, APIs, and personas must be factually researched. If a search tool is missing, they receive the hard-tag `<!-- UNCONFIRMED -->`.
-* **Inherited Self-Correction:** More complex target skills receive an injected rule from the Engineer, forcing them to critically review their own output against their sharpest taboos and typical error sources *of this specific skill* as a final step (Double-Check) before delivering it to the user.
+---
+
+## 5. The 13-Point Quality Gate *(Expanded in v4.0)*
+Before the Skill-Engineer releases a target skill, it silently forces it through this checklist (13 maximum points across 4 categories):
+
+### A. Architectural Purity (0–3 Points)
+1. Native XML-Tags (no prose instructions)
+2. Mechanics over Adjectives
+3. Platform-agnostic format (YAML-Frontmatter)
+
+### B. Anti-Hallucination & Security (0–4 Points)
+4. Environment Check in Step 1
+5. Self-Correction / Chain-of-Thought injected
+6. Explicit Taboo list
+7. Unconfirmed references marked with `<!-- UNCONFIRMED -->`
+
+### C. Developer Experience (0–3 Points)
+8. Zero-Shot Triggering precision
+9. Few-Shot example included
+10. Stateful/Stateless correctness
+
+### D. Ecosystem Integration & Maintainability (0–3 Points) *(New in v4.0)*
+11. **Cross-Skill Delegation:** Sub-tasks delegated to specialized neighbor skills with briefing + return format.
+12. **Reference Quality:** Every reference file independently usable, under 200 lines, Mermaid for decision trees with ≥3 branches.
+13. **Update Capability:** Dynamic reference files (inventories, lists) contain date, maintenance rules, and status tracking.
 
 ---
 
