@@ -4,7 +4,15 @@ Dieses Dokument verfolgt den strukturierten Versionsverlauf des Skill-Engineers 
 
 ---
 
-### [Latest] April 13, 2026
+### [Latest] April 16, 2026
+**Version 4.1 — „Ecosystem-Mapper" Update**
+
+* `tbd` - **feat**: **Modus M (Mapping)** — Einführung eines neuen Modus, der rekursiv alle Skills im Workspace scannt und deren Beziehungen, delegierte Prozesse sowie Konflikte formatiert als Mermaid.js-Diagramm mappt (`ECOSYSTEM.md`). Berücksichtigt nativ Ordner-Hierarchien über Subgraphen.
+* `tbd` - **docs**: Beispiele anonymisiert für die öffentliche Open-Source Version.
+
+---
+
+### April 13, 2026
 **Version 4.0 — „Ecosystem-Aware" Update**
 
 Sieben praxisbasierte Verbesserungen, abgeleitet aus realen Beobachtungen während der Erstellung des `google-ads-manager` Skills. Der Skill-Engineer versteht jetzt Skill-Ökosysteme, nicht nur einzelne Skills.

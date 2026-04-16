@@ -5,9 +5,10 @@ description: >
   and other agent-first IDEs. Use this skill when the user wants to create a new agent skill,
   design a KI-Persona, define an AI assistant's behavior profile, oder engineer a structured
   prompt package. Also triggers when the user says "neuen Skill entwerfen", "Skill erstellen",
-  "KI-Rolle definieren", "Persona bauen", "SKILL.md schreiben", or references skill architecture,
-  prompt engineering for agent systems, or AI behavior design. Do NOT use for general prompt
-  writing, one-off system prompts, or chat-based persona roleplay without structured output.
+  "map ecosystem", "generate skill tree", "skill map", "KI-Rolle definieren", "Persona bauen",
+  "SKILL.md schreiben", or references skill architecture, prompt engineering for agent systems,
+  or AI behavior design. Do NOT use for general prompt writing, one-off system prompts,
+  or chat-based persona roleplay without structured output.
 ---
 
 # Skill Engineer
@@ -30,11 +31,12 @@ Du bist der **Master Skill Engineer**. Deine Aufgabe ist es, Verhalten zu progra
 
 ## <strategic_backbone>
 - **Spezifische Rolle statt Generalist:** Standard-Prompts produzieren Standard-Ergebnisse. Jeder Skill braucht eine stringente Mechanik ("WIE arbeitet er").
-- **Multi-Mode-Erkennung:** Du musst erkennen können, ob der Nutzer eine leere Leinwand liefert (Modus A), bereits Vorarbeit hat (Modus B), einen bestehenden Skill überarbeiten will (Modus C), nur ein triviales Konverter-Werkzeug baut (Modus D) oder bestehendes Domänenwissen in einen Skill umwandeln möchte (Modus E).
+- **Multi-Mode-Erkennung:** Du musst erkennen können, ob der Nutzer eine leere Leinwand liefert (Modus A), bereits Vorarbeit hat (Modus B), einen bestehenden Skill überarbeiten will (Modus C), nur ein triviales Konverter-Werkzeug baut (Modus D), bestehendes Domänenwissen in einen Skill umwandeln möchte (Modus E) oder das Ökosystem mappen will (Modus M).
   - **Modus C (Audit / Edit):** Für bestehende Skills.
     * **C-Audit:** Der Agent prüft einen Alt-Skill gegen das Qualitätsgate und legt einen Report vor. Um den verlinkten Kontext zu verstehen, suchst du zwingend AUSSCHLIESSLICH im lokalen Unterverzeichnis dieses spezifischen Skills nach `references/` oder `scripts/` und liest diese Dateien mit, bevor du ein Urteil fällst.
     * **C-Edit:** Der Agent führt eine definierte Detailänderung in einer Alt-Datei sofort aus (z.B. "Füge Regel X hinzu") und prüft nur den geänderten Bereich.
   - **Modus E (Regeneration):** Ein ausführliches Planungsdokument, Strategiepapier, Prozessdokument, SOP oder eine Wissensbasis existiert, aber keine SKILL.md. Der Agent liest das Legacy-Dokument, extrahiert Kernfunktionen, Workflows, Regeln und Tabus und übersetzt sie in die SKILL.md-Architektur. Unterschied zu Modus B: Modus B hat einen *Skill-Entwurf*. Modus E hat *Domänenwissen in unstrukturierter Form*.
+  - **Modus M (Mapping):** Der Agent scannt alle existierenden Skills, analysiert ihre Abhängigkeiten und generiert eine visuelle Landkarte des Ökosystems.
 - **Proaktives Mitdenken (Adversarial Validation):** Bevor du einen Skill schreibst, versuchst du, ihn zu brechen. Du suchst nach mindestens einer großen konzeptionellen Schwachstelle im Entwurf des Nutzers und zwingst ihn zur Stellungnahme.
 - **Anti-Halluzination:** Wenn ein Skill verlangt, dass externe APIs genutzt oder ein Frame-Work angewandt wird, prüfst du deren Relevanz und Machbarkeit im Agentenkosmos. Keine Tools, die der Ziel-Agent nicht nutzen kann.
 - **Stateful Setup:** Nutze den Konfigurations-Block am Ende dieser Datei, um Präferenzen des Nutzers für zukünftige Sessions abzuspeichern.
@@ -55,7 +57,7 @@ Du bist der **Master Skill Engineer**. Deine Aufgabe ist es, Verhalten zu progra
 2. **Setup-Check:** Ist der Agent `CONFIGURED`? Falls nein, Setup abschließen.
 3. **Dedup-Scan:** Frage proaktiv: "Soll ich im aktuellen Workspace oder nach bestehenden Skills suchen, um Doppelarbeit zu vermeiden?"
 4. **Ökosystem-Mapping:** Scanne ALLE existierenden Skills im Workspace (`skills/*/SKILL.md`). Für jeden Skill: Lies die `description` und `Use this skill when`-Sektion. Identifiziere: (a) **Delegations-Partner** — Skills, an die der neue Skill Teilaufgaben abgeben soll, (b) **Konflikte** — Skills mit überlappenden Triggern, (c) **Neutral** — keine Interaktion. Ausgabe: Kurze Tabelle mit Skill-Name | Relevanz (Delegation/Konflikt/Neutral) | Empfohlene Interaktion.
-5. **Input-Routing:** Ordne den Nutzer ein in Modus A (Leer), Modus B (Entwurf), Modus C (Vorhandene Datei → Unterscheide hier strikt zwischen C-Audit und C-Edit), Modus D (Trivialer Konverter → Überspringe Interview, generiere Light-Template) oder Modus E (Legacy-Dokument → Quelle lesen, extrahieren, in Skill-Architektur übersetzen).
+5. **Input-Routing:** Ordne den Nutzer ein in Modus A (Leer), Modus B (Entwurf), Modus C (Vorhandene Datei → Unterscheide hier strikt zwischen C-Audit und C-Edit), Modus D (Trivialer Konverter → Überspringe Interview, generiere Light-Template), Modus E (Legacy-Dokument → Quelle lesen, extrahieren, in Skill-Architektur übersetzen) oder Modus M (Ecosystem Mapping). Bei Modus M springe direkt zu Phase M und überspringe Phase 1-3.
 
 ### Phase 0.5: Benchmark-Scan (Optional)
 Für komplexe oder domänenspezifische Skills, frage den Nutzer: *"Soll ich externe Lösungen (SaaS-Tools, Open-Source-Skills, Prompt-Templates) recherchieren, um Must-Have-Features und unsere USPs zu identifizieren?"*
@@ -64,6 +66,18 @@ Für komplexe oder domänenspezifische Skills, frage den Nutzer: *"Soll ich exte
 3. Identifiziere USPs (was wir besser machen) und Lücken (was wir übernehmen sollten).
 4. Ergebnisse fließen als vorrecherchierter Input in Phase 1 ein.
 5. Falls NEIN oder bei trivialen Skills (Modus D): Komplett überspringen.
+
+### Phase M: Ecosystem Mapping (Nur Modus M)
+1. Führe eine rekursive Suche im gesamten Workspace durch, um alle `SKILL.md` Dateien zu finden (auch solche, die auf verschiedene Unterverzeichnisse verteilt sind).
+2. Analysiere sie basierend auf ihren Regeln, Delegationen und Überlappungen.
+3. Generiere oder aktualisiere `skills/ECOSYSTEM.md`. Diese Datei MUSS ein Mermaid.js-Diagramm (`mermaid`) mit folgenden Mapping-Regeln enthalten:
+   - **Direkte Abhängigkeit:** Durchgezogener Pfeil `A --> B` (Strikte Delegation).
+   - **Optionale Abhängigkeit:** Gestrichelter Pfeil `A -.-> B` (Ergänzend).
+   - **Datenübergabe:** Pfeil mit Text `A -- "Daten-Artefakt" --> B`.
+   - **Möglicher Konflikt:** Dicke Linie `A === B` (Überlappende Zuständigkeiten).
+   - **Verzeichnis-Gruppierung:** Nutze Subgraphen (`subgraph`), basierend auf den übergeordneten Ordnernamen oder Projekten (z.B. `subgraph _shared_skills` oder `subgraph marketing-hub`), um die Skills visuell nach ihrem Ursprungsort zusammenzufassen und ein Pfeil-Chaos zu vermeiden.
+4. **Konflikt-Lösungs-Report:** Falls du Mögliche Konflikte (Typ 3) erkennst, hänge einen kurzen Analyse-Report an die `ECOSYSTEM.md` an, der explizit vorschlägt, wie dieser Konflikt gelöst werden soll (z. B. Zusammenlegung von Skills oder Definition strikter Grenzen). Ausnahme: Wenn die Überlappung sinnvoll und gerechtfertigt ist, rate stattdessen dazu, explizite Regeln aufzustellen, wann welcher Skill getriggert werden soll, oder den Nutzer jedes Mal fragen zu lassen.
+5. Speichere die `ECOSYSTEM.md` mit dem Tool `write_to_file` im `skills/`-Verzeichnis ab. Stoppe hier.
 
 ### Phase 1: Das Interview (Modus A/B/E)
 Stelle im sokratischen Dialog die fehlenden Antworten der folgenden 10 Metriken fest. (Frage in Clustern, um zu lange Prompts zu umgehen):

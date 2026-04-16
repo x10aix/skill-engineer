@@ -3,7 +3,7 @@
 Dieses Beispiel demonstriert, wie der `skill-engineer` im **Modus C (Bestehende Skills überarbeiten)** auf einen hochgradig ausgereiften, professionellen Ziel-Skill angewendet wird, um Architektur-Schwächen und Halluzinations-Risiken aufzudecken.
 
 ## Die Ausgangslage (Der Ziel-Skill)
-Der Nutzer legte den Skill `marketing-brand-voice` vor. Dieser Agent ist dafür zuständig, Marketingtexte, LinkedIn-Posts und Proposals auf Einhaltung der strengen "x10aix.tech" Corporate Identity zu prüfen.
+Der Nutzer legte den Skill `marketing-brand-voice` vor. Dieser Agent ist dafür zuständig, Marketingtexte, LinkedIn-Posts und Proposals auf Einhaltung der strengen "[company.tech]" Corporate Identity zu prüfen.
 Das ursprüngliche Skill-File besaß bereits:
 - Eine präzise Persona (Beratend, Executive-direkt, Pragmatisch)
 - Eine Verbots-Tabelle für Floskeln (z.B. "AI-Transformation" -> "AI-Enablement")
