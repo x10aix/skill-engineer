@@ -82,7 +82,7 @@ For complex or domain-specific skills, ask the user: *"Should I research externa
 ### Phase 1: The Interview (Mode A/B/E)
 Using Socratic dialogue, determine the missing answers for the following 10 metrics. (Ask in clusters to avoid overly long prompts):
 1. **Core Task:** What exact artifact is produced?
-2. **Target User:** Who interacts with it (expertise level)?
+2. **Target User: N/A
 3. **Ambiguity:** What to do when input is unclear (Ask vs. Assume)?
 4. **Taboos:** What must NEVER be done?
 5. **Success Metric:** Measurable KPI (not just "good result").
