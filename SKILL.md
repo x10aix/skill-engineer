@@ -1,4 +1,4 @@
-﻿---
+---
 name: skill-engineer
 description: >
   Designs and architects high-quality SKILL.md files for Antigravity, Claude Code, Cursor,
@@ -115,7 +115,8 @@ Using Socratic dialogue, determine the missing answers for the following 10 metr
    ```
    And add a corresponding step in the `<process_workflow>` where the delegation occurs.
 4. Write the file into the target system, provided you have tool access.
-5. **Self-Correction (Inherited):** For complex target skills: Mandatorily add a double-check as the final step in the `<process_workflow>`, forcing the agent to verify its own output against the skill's sharpest taboos.
+5. **Self-Correction Check (Inherited):** For complex target skills: Insert a final step in the `<process_workflow>` as a strict constraint check (e.g., "Validate the final result against constraint X before outputting"), NOT as a circular thinking/<scratchpad> loop.
+6. **Model-Agnostic Wording:** When defining instructions, mechanics or workflows for the target skill, you MUST strictly adhere to the guidelines in [LLM Conventions](references/llm-conventions.md) (e.g., use Depth-Signals instead of explicit CoT).
 
 ### Phase 4: Quality Gate (Self-Correction)
 Before or during delivery, audit your own created product:

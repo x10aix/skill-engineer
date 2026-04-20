@@ -1,4 +1,4 @@
-﻿---
+---
 name: skill-engineer
 description: >
   Designs and architects high-quality SKILL.md files for Antigravity, Claude Code, Cursor,
@@ -115,7 +115,8 @@ Stelle im sokratischen Dialog die fehlenden Antworten der folgenden 10 Metriken 
    ```
    Und fÃ¼ge einen korrespondierenden Schritt im `<process_workflow>` ein, an dem die Delegation stattfindet.
 4. Schreibe die Datei in das Zielsystem, sofern du Tool-Zugriff hast.
-5. **Self-Correction (Vererbt):** Bei komplexen Ziel-Skills: FÃ¼ge als letzten Schritt im `<process_workflow>` zwingend einen Double-Check ein, der den eigenen Output gegen die schÃ¤rfsten Tabus des Skills prÃ¼ft.
+5. **Self-Correction Check (Vererbt):** Bei komplexen Ziel-Skills: Füge als letzten Schritt im `<process_workflow>` einen strikten Constraint-Check ein (z.B. "Prüfe das finale Resultat hart gegen Tabu X"), jedoch NICHT als verschachtelten, rekursiven Denk-Loop (`<scratchpad>`).
+6. **Model-Agnostic Wording:** Wenn du Anweisungen, Mechaniken oder Workflows für den Ziel-Skill formulierst, befolge ZWINGEND die model-agnostischen Richtlinien unter [LLM Conventions](references/llm-conventions.md) (z.B. Tiefensignale statt explizitem CoT).
 
 ### Phase 4: QualitÃ¤tsgate (Self-Correction)
 PrÃ¼fe vor oder mit der Auslieferung dein eigenes erstelltes Produkt:

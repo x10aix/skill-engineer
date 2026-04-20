@@ -4,7 +4,17 @@ This document tracks the structured version history of the Skill-Engineer based 
 
 ---
 
-### [Latest] April 16, 2026
+### [Latest] April 20, 2026
+**Version 4.2 — "Model-Agnostic Prompting" Update**
+
+* `tbd` - **feat**: **llm-conventions.md** — Introduced a centralized reference for model-agnostic prompting, preventing IF/ELSE branching by `Target LLM`.
+* `tbd` - **feat**: **Constraint-Checks** — Replaced recursive "Self-Correction" CoT-loops with strict final Constraint-Checks, optimizing performance for Reasoning Models (e.g., Opus 4.7, o1).
+* `tbd` - **feat**: **Depth-Signals** — The Skill-Engineer now generates deep contextual constraints instead of forcing a `<scratchpad>` for thoughts.
+* `tbd` - **docs**: Added example `04-model-agnostic-refactoring.md` showing how legacy skills like `google-ads-manager` are audited to fit the new conventions.
+
+---
+
+### April 16, 2026
 **Version 4.1 — "Ecosystem-Mapper" Update**
 
 * `tbd` - **feat**: **Mode M (Mapping)** — Introduced a new mode that recursively scans all skills in the workspace and maps their relationships, delegations, and conflicts into a Mermaid.js diagram (`ECOSYSTEM.md`). Logically groups skills into subgraphs based on their parent directories.

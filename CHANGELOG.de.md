@@ -4,7 +4,17 @@ Dieses Dokument verfolgt den strukturierten Versionsverlauf des Skill-Engineers 
 
 ---
 
-### [Latest] April 16, 2026
+### [Latest] April 20, 2026
+**Version 4.2 — „Model-Agnostic Prompting" Update**
+
+* `tbd` - **feat**: **llm-conventions.md** — Zentrale Auslagerung von Prompting-Architekturen. Löst klassisches If/Else-Branching nach `Target LLM` durch generisches "Model-Agnostic Wording" ab.
+* `tbd` - **feat**: **Constraint-Checks** — Der Skill-Engineer baut in generierte Skills keine rekursiven CoT-Denkschleifen mehr ein, sondern knallharte Validierungs-Gates am Ende jedes Workflows (Performance Boost für Opus 4.7 / o1).
+* `tbd` - **feat**: **Depth-Signals** — Anstelle des `<scratchpad>`-Zwangs werden komplexe Denkprozesse für das Ziel-LLM nun über "Tiefensignale" angetriggert.
+* `tbd` - **docs**: Neues Beispiel `04-model-agnostic-refactoring.md` zeigt am Fallbeispiel des `google-ads-manager`, wie Alt-Skills in Modus C umgeschrieben werden.
+
+---
+
+### April 16, 2026
 **Version 4.1 — „Ecosystem-Mapper" Update**
 
 * `tbd` - **feat**: **Modus M (Mapping)** — Einführung eines neuen Modus, der rekursiv alle Skills im Workspace scannt und deren Beziehungen, delegierte Prozesse sowie Konflikte formatiert als Mermaid.js-Diagramm mappt (`ECOSYSTEM.md`). Berücksichtigt nativ Ordner-Hierarchien über Subgraphen.
