@@ -4,6 +4,24 @@ Dieses Dokument verfolgt den strukturierten Versionsverlauf des Skill-Engineers 
 
 ---
 
+### [Latest] May 13, 2026
+**Version 4.4 — „Agent Economy 2026" Update**
+
+* `tbd` - **feat**: **Stateful Ecosystem Pruning** — Der Skill-Engineer liest in Phase 0 nun nicht mehr stur alle Dateien, sondern prüft (stateful via `.skill-config.json`) die `ECOSYSTEM.md` Map. Das verhindert Token-Bloat und Context-Inflation (Pruning).
+* `tbd` - **feat**: **Skill-Mapper Auslagerung** — Die rekursive Mapping-Logik (ehemals Modus M) wurde aus Performance-Gründen (Separation of Concerns) in einen separaten `skill-mapper` Agenten ausgelagert.
+* `tbd` - **feat**: **Conflict-Router** — Erkennt der Engineer einen Überlappungs-Konflikt, schlägt er proaktiv die Generierung eines "Router-Skills" vor, anstatt nur zu warnen.
+* `tbd` - **feat**: **Toxic Inputs & TSD** — In Phase 3 (TSD) wird nun explizit das Entwerfen von "Toxic Inputs" (z.B. überlange Strings, Race Conditions) für Edge-Case-Tests gefordert.
+* `tbd` - **feat**: **Dialektische Validierung (Red Teaming)** — Phase 2.5 eingeführt: Der Agent muss seinen eigenen Skill-Entwurf im "Adversarial Build" Modus selbst angreifen (Logikfehler, Statelessness-Checks, IDE-Constraints).
+
+
+### [Latest] April 29, 2026
+**Version 4.3 — „Stateless Architecture" Update**
+
+* `tbd` - **feat**: **Stateless Design** — Vollständiger Wechsel von Inline-Konfigurationen (`<!-- CONFIGURATION_START -->`) zu einer strikt lokalen `.skill-config.json`. Verhindert Git-Konflikte bei Updates und trennt Skill-Logik vom User-State.
+* `tbd` - **feat**: **Monorepo Ready** — Bereinigung der Architektur zur nahtlosen Integration in zentrale Skill-Bibliotheken (x10aix-skills).
+
+---
+
 ### [Latest] April 20, 2026
 **Version 4.2 — „Model-Agnostic Prompting" Update**
 

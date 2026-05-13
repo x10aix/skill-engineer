@@ -4,6 +4,24 @@ This document tracks the structured version history of the Skill-Engineer based 
 
 ---
 
+### [Latest] May 13, 2026
+**Version 4.4 — „Agent Economy 2026" Update**
+
+* `tbd` - **feat**: **Stateful Ecosystem Pruning** — The Skill-Engineer now reads only the `ECOSYSTEM.md` map in Phase 0 (statefully tracking via `.skill-config.json`), preventing token bloat and context inflation.
+* `tbd` - **feat**: **Skill-Mapper Extraction** — The recursive mapping logic (formerly Modus M) has been extracted into a separate `skill-mapper` agent for better separation of concerns.
+* `tbd` - **feat**: **Conflict-Router** — When overlapping skills are detected, the agent proactively suggests generating a "Router-Skill" rather than just issuing a warning.
+* `tbd` - **feat**: **Toxic Inputs & TSD** — Phase 3 (Test-Driven Skill Development) now explicitly requires the design of "Toxic Inputs" (e.g., excessively long strings, race conditions) for edge-case testing.
+* `tbd` - **feat**: **Dialectical Validation (Red Teaming)** — Introduced Phase 2.5: The agent must attack its own skill draft in an "Adversarial Build" mode (logic flaws, statelessness checks, IDE constraints).
+
+
+### [Latest] April 29, 2026
+**Version 4.3 — "Stateless Architecture" Update**
+
+* `tbd` - **feat**: **Stateless Design** — Full transition from inline configuration blocks (`<!-- CONFIGURATION_START -->`) to strict local `.skill-config.json` files. Prevents git conflicts during updates and separates skill logic from user state.
+* `tbd` - **feat**: **Monorepo Ready** — Cleaned up architecture for seamless integration into centralized skill libraries (x10aix-skills).
+
+---
+
 ### [Latest] April 20, 2026
 **Version 4.2 — "Model-Agnostic Prompting" Update**
 

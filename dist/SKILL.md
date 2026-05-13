@@ -46,18 +46,22 @@ Dieser Skill nutzt eine "Logic vs. State" Architektur. Die Konfiguration wird NI
 
 ### PHASE 0: SMART START (Umgebungs-Scan & Input-Routing)
 
-**Schritt 0.1: Skill-Map Check (Stateful Pruning)**
-Prüfe ZUERST (sofern Dateisystem-Zugriff besteht), ob die Datei `ECOSYSTEM.md` im Workspace existiert.
-- **Falls NEIN:** Prüfe die `.skill-config.json`. Wenn dort *nicht* `"Ecosystem-Mapping": "disabled"` steht, frage proaktiv: *"Ich sehe keine Skill-Map (ECOSYSTEM.md). Soll ich den `skill-mapper` beauftragen, eine zu erstellen, oder möchtest du im 'Blindflug' ohne Mapping arbeiten?"* Speichere die Präferenz in der Config. Bei 'Ja' delegiere an den `skill-mapper` und warte auf das fertige Dokument.
-- **Falls JA:** Lies **ausschließlich** die `ECOSYSTEM.md`, um das Ökosystem zu begreifen (Pruning). Lies NICHT rekursiv alle Skill-Dateien im Workspace (Gefahr von Timeouts & Token-Bloat).
-- **Conflict-Router Check:** Falls die Map zeigt, dass der angefragte Skill fast identisch zu einem bestehenden ist (Konflikt), schlage automatisch vor: *"Sollen wir stattdessen einen 'Router-Skill' bauen, der Anfragen dynamisch an den bestehenden Skill oder eine neue Teil-Routine weiterleitet?"*
-- **Delegation:** Identifiziere über die Map potenzielle Delegations-Partner für den neuen Skill.
+**Schritt 0.1: Umgebungs-Scan (Dedup-Prüfung)**
+Prüfe ZUERST (sofern Dateisystem-Zugriff besteht), ob im aktuellen Workspace oder im globalen Tool-Verzeichnis (z.B. `~/.claude/` oder `~/.gemini/`) bereits Skills existieren.
+- Führe KEINE unaufgeforderte, systemweite rekursive Suche durch (Gefahr von Timeouts).
+- Frage den Nutzer stattdessen aktiv: "Soll ich in spezifischen anderen Projekt-Ordnern (z.B. Marketing-Hub) nach bestehenden Skills suchen?"
+- Wenn ähnliche Skills gefunden werden, präsentiere eine Gegenüberstellung:
+  > **[Vorhandener Skill-Name]**: Deckt das Ziel [voll / teilweise / wenig] ab.
+- Frage: "Diesen Skill überarbeiten (Modus C)? Aspekte kopieren? Oder komplett neu bauen?"
+- **CRITICAL:** Stelle diese Frage STAND-ALONE! Überfalle den Nutzer hier noch nicht mit dem Parameter-Check. Warte zwingend die Dedup-Antwort ab.
+- Wenn der Nutzer Modus C oder Kopieren wählt, übernimm die Metadaten des gefundenen Skills als Vorbefüllung für die Parameter.
+- Wenn keine ähnlichen Skills existieren, gehe direkt zu Schritt 0.2.
 
 **Schritt 0.2: Input-Routing**
 Bevor du das Interview startest, klassifiziere den Input:
 
 **Modus A — Leere Leinwand:** Der Nutzer hat eine vage Idee oder nur ein Thema.
-→ Starte Phase 1 vollständig (alle 7 Fragen). **(Heavy-Duty Skill)**
+→ Starte Phase 1 vollständig (alle 7 Fragen).
 
 **Modus B — Vorarbeit vorhanden:** Der Nutzer liefert einen Entwurf, Textblock,
 bestehenden Prompt oder eine detaillierte Beschreibung.
@@ -115,7 +119,7 @@ Der Nutzer entscheidet, welche Fixes umgesetzt werden.
 Setze nur die bestätigten Änderungen um. Führe danach das Qualitätsgate
 (Phase 4) erneut gegen den überarbeiteten Skill durch.
 
-**Modus D — Quick Draft (triviale / werkzeugartige / Lightweight Skills):**
+**Modus D — Quick Draft (triviale / werkzeugartige Skills):**
 Der Nutzer beschreibt einen einfachen, klar umrissenen Skill ohne Persona-Komplexität.
 
 **Komplexitätserkennung — wann greift Modus D?**
@@ -222,15 +226,6 @@ der Skill in der Praxis am ehesten scheitern könnte, und wie du ihn absicherst.
 
 4. Warte auf Bestätigung oder Korrektur.
 
-### PHASE 2.5: DIALEKTISCHE VALIDIERUNG (RED TEAMING)
-
-Bevor der Skill physisch generiert wird, musst du den vorgeschlagenen Workflow einem "Adversarial Build"-Test unterziehen:
-1. **Edge-Cases (Grenzbereiche):** Was passiert bei unvollständigen Payloads (z.B. API meldet 'Success', aber Daten sind leer)?
-2. **Runtime-Widersprüche:** Gibt es logische Fehler wie z.B. einen zustandslosen (stateless) Skill, der versehentlich Artefakte im Cache erwartet?
-3. **Zirkelschluss-Logik:** Verhindere Endlosschleifen in der Fehlerbehandlung.
-4. **Plattform-Constraints:** Verletzen die Regeln die Sicherheitsrichtlinien der IDE (Antigravity) oder sind die Tools für Claude/MCP nicht "wasserdicht" genug beschrieben, was zu Halluzinationen bei der Tool-Wahl führen könnte?
-*Präsentiere dem Nutzer kurz deine Red-Team-Findings und passe den Strategie-Vorschlag entsprechend an, um den Skill robuster zu machen.*
-
 ### PHASE 3: SKILL OUTPUT
 
 Generiere die SKILL.md im plattformkonformen Format.
@@ -243,12 +238,8 @@ skill-name/
 ├── scripts/          # Optional: Ausführbare Hilfsskripte
 ├── references/       # Optional: Referenzdokumente, Methodenbeschreibungen
 ├── examples/         # Optional: Beispiel-Inputs und -Outputs
-├── tests/            # Optional: Test-Matrix und Edge-Case Validierung
 └── resources/        # Optional: Templates, statische Assets
 ```
-
-**Test-Driven Skill Development (TSD):** 
-Lege zwingend eine Test-Matrix oder Test-Szenarien im `tests/`-Ordner an. Entwirf dabei explizit **"Toxic Inputs"** (z.B. massiv überlange Strings, kaputte JSON-Strukturen, Race Conditions), um die Robustheit der Fehlerbehandlung zu garantieren. Ein Skill gilt erst als produktionsbereit, wenn seine Randbedingungen (Edge-Cases) definiert und testbar sind.
 
 **SKILL.md-Aufbau:**
 

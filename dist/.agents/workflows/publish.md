@@ -55,18 +55,13 @@ Führe folgenden Befehl aus, um beide SKILL-Dateien in den Auslieferungszustand 
 ### 3. Changelog Synch & Translation
 **Sehr wichtig:** Prüfe kurz, ob es neue Einträge in der Datei `CHANGELOG.de.md` gibt, die noch nicht in der englischen `CHANGELOG.md` stehen. Wenn ja, übersetze diese selbstständig im besten Entwickler-Englisch und trage sie in die `CHANGELOG.md` ein.
 
-### 4. Git Commit & Push (Private Monorepo & Public Open-Source)
-Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v4.4").
-Formatiere den Commit und führe zuerst den Push in das interne Repo aus:
+### 4. Git Commit & Push
+Frage den Nutzer nach der gewünschten Commit-Nachricht (z.B. "Update skills to v3.2").
+Formatiere den Commit und führe aus:
 ```powershell
    git add .
    git commit -m "[Hier die Nutzer-Nachricht einfügen]"
-   git push private main
+   git push
 ```
 
-Führe danach das Open-Source-Release-Skript aus, welches den Skill-Engineer (inklusive Skill-Mapper Addon) isoliert kopiert und auf das öffentliche Repo `x10aix/skill-engineer` pusht:
-```powershell
-   .\scripts\publish_opensource.ps1 -CommitMessage "[Hier die Nutzer-Nachricht einfügen]"
-```
-
-Gib eine Erfolgsmeldung aus, dass das Release erfolgreich und sicher in beide Repositories gepusht wurde!
+Gib eine Erfolgsmeldung aus, dass das Release erfolgreich und sicher auf GitHub gepusht wurde!

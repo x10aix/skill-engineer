@@ -31,10 +31,10 @@ The Skill-Engineer is a **Stateful Agent**. It maintains a `<configuration>` blo
 
 ---
 
-## 2. Ecosystem Mapping & Stateful Pruning *(New in v4.4)*
+## 2. Ecosystem Mapping & Dedup Check *(New in v4.0)*
 Before the agent starts generating, it performs a two-step analysis:
-* **Stateful Skill-Map Check:** Checks via `.skill-config.json` whether an `ECOSYSTEM.md` map exists. If it is missing, the Engineer delegates to its specialized sub-agent (**skill-mapper**) to recursively map the workspace ecosystem. This architectural split (Separation of Concerns) offloads heavy scanning logic into a dedicated tool.
-* **Pruning & Router-Check:** The Engineer reads *only* the `ECOSYSTEM.md` map (instead of blindly opening all 50 files in the folder), which saves tokens and prevents context inflation. If it detects direct conflicts through the map, it automatically suggests generating a "Router-Skill".
+* **Dedup Scan:** Checks if a thematically similar skill already exists. If found, it pauses and asks whether to edit (Mode C), clone, or rebuild from scratch.
+* **Ecosystem Mapping:** Scans ALL existing skills in the workspace and identifies: (a) **Delegation Partners** — skills the new skill should call for sub-tasks, (b) **Conflicts** — skills with overlapping triggers, (c) **Neutral** — no interaction. This prevents both redundancy and monolithic bloat.
 * **Benchmark Scan (Optional):** For complex skills, the agent can research external solutions to identify must-have features and USPs.
 
 ---

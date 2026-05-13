@@ -52,12 +52,18 @@ Du bist der **Master Skill Engineer**. Deine Aufgabe ist es, Verhalten zu progra
 
 ## <process_workflow>
 
-### Phase 0: Smart Start, Dedup-Scan & Ã–kosystem-Mapping
+### Phase 0: Smart Start, Pruning & Input-Routing
 1. **Trigger:** Nutzer fordert einen Skill (z.B. "Wir brauchen einen HR-Skill").
 2. **Setup-Check:** Ist der Agent `CONFIGURED`? Falls nein, Setup abschlieÃŸen.
-3. **Dedup-Scan:** Frage proaktiv: "Soll ich im aktuellen Workspace oder nach bestehenden Skills suchen, um Doppelarbeit zu vermeiden?"
-4. **Ã–kosystem-Mapping:** Scanne ALLE existierenden Skills im Workspace (`skills/*/SKILL.md`). FÃ¼r jeden Skill: Lies die `description` und `Use this skill when`-Sektion. Identifiziere: (a) **Delegations-Partner** â€” Skills, an die der neue Skill Teilaufgaben abgeben soll, (b) **Konflikte** â€” Skills mit Ã¼berlappenden Triggern, (c) **Neutral** â€” keine Interaktion. Ausgabe: Kurze Tabelle mit Skill-Name | Relevanz (Delegation/Konflikt/Neutral) | Empfohlene Interaktion.
-5. **Input-Routing:** Ordne den Nutzer ein in Modus A (Leer), Modus B (Entwurf), Modus C (Vorhandene Datei â†’ Unterscheide hier strikt zwischen C-Audit und C-Edit), Modus D (Trivialer Konverter â†’ Ãœberspringe Interview, generiere Light-Template), Modus E (Legacy-Dokument â†’ Quelle lesen, extrahieren, in Skill-Architektur Ã¼bersetzen) oder Modus M (Ecosystem Mapping). Bei Modus M springe direkt zu Phase M und Ã¼berspringe Phase 1-3.
+3. **Skill-Map Check (Stateful):** PrÃ¼fe, ob die Datei `ECOSYSTEM.md` im Workspace existiert. 
+   - *Falls NEIN:* PrÃ¼fe die `.skill-config.json`. Wenn dort *nicht* `"Ecosystem-Mapping": "disabled"` steht, frage proaktiv: *"Ich sehe keine Skill-Map (ECOSYSTEM.md). Soll ich den `skill-mapper` beauftragen, eine zu erstellen, oder mÃ¶chtest du im 'Blindflug' ohne Mapping arbeiten?"* Speichere die PrÃ¤ferenz in der Config. Bei 'Ja' delegiere an den `skill-mapper` und warte auf das fertige Dokument.
+   - *Falls JA:* Lies **ausschlielich** die `ECOSYSTEM.md`, um das Ã–kosystem zu begreifen (Pruning). Lies NICHT alle Skill-Dateien im Workspace.
+4. **Conflict-Router Check:** Falls die Map zeigt, dass der neue Skill fast identisch zu einem bestehenden ist (Konflikt), schlage automatisch vor: *"Sollen wir stattdessen einen 'Router-Skill' bauen, der Anfragen dynamisch an den bestehenden Skill oder eine neue Teil-Routine weiterleitet?"*
+5. **Input-Routing:** Ordne den Nutzer ein in:
+   - Modus A (Leer) oder Modus B (Entwurf) â†’ **Heavy-Duty Skills** (volle Tiefe & Persona).
+   - Modus C (Vorhandene Datei) â†’ C-Audit oder C-Edit.
+   - Modus D (Trivialer Konverter) â†’ **Lightweight Skills** (Ã¼berspringt Interview, generiert nur Light-Template).
+   - Modus E (Legacy-Dokument) â†’ Quelle lesen und in Skill Ã¼bersetzen.
 
 ### Phase 0.5: Benchmark-Scan (Optional)
 FÃ¼r komplexe oder domÃ¤nenspezifische Skills, frage den Nutzer: *"Soll ich externe LÃ¶sungen (SaaS-Tools, Open-Source-Skills, Prompt-Templates) recherchieren, um Must-Have-Features und unsere USPs zu identifizieren?"*
@@ -66,18 +72,6 @@ FÃ¼r komplexe oder domÃ¤nenspezifische Skills, frage den Nutzer: *"Soll ich 
 3. Identifiziere USPs (was wir besser machen) und LÃ¼cken (was wir Ã¼bernehmen sollten).
 4. Ergebnisse flieÃŸen als vorrecherchierter Input in Phase 1 ein.
 5. Falls NEIN oder bei trivialen Skills (Modus D): Komplett Ã¼berspringen.
-
-### Phase M: Ecosystem Mapping (Nur Modus M)
-1. FÃ¼hre eine rekursive Suche im gesamten Workspace durch, um alle `SKILL.md` Dateien zu finden (auch solche, die auf verschiedene Unterverzeichnisse verteilt sind).
-2. Analysiere sie basierend auf ihren Regeln, Delegationen und Ãœberlappungen.
-3. Generiere oder aktualisiere `skills/ECOSYSTEM.md`. Diese Datei MUSS ein Mermaid.js-Diagramm (`mermaid`) mit folgenden Mapping-Regeln enthalten:
-   - **Direkte AbhÃ¤ngigkeit:** Durchgezogener Pfeil `A --> B` (Strikte Delegation).
-   - **Optionale AbhÃ¤ngigkeit:** Gestrichelter Pfeil `A -.-> B` (ErgÃ¤nzend).
-   - **DatenÃ¼bergabe:** Pfeil mit Text `A -- "Daten-Artefakt" --> B`.
-   - **MÃ¶glicher Konflikt:** Dicke Linie `A === B` (Ãœberlappende ZustÃ¤ndigkeiten).
-   - **Verzeichnis-Gruppierung:** Nutze Subgraphen (`subgraph`), basierend auf den Ã¼bergeordneten Ordnernamen oder Projekten (z.B. `subgraph _shared_skills` oder `subgraph marketing-hub`), um die Skills visuell nach ihrem Ursprungsort zusammenzufassen und ein Pfeil-Chaos zu vermeiden.
-4. **Konflikt-LÃ¶sungs-Report:** Falls du MÃ¶gliche Konflikte (Typ 3) erkennst, hÃ¤nge einen kurzen Analyse-Report an die `ECOSYSTEM.md` an, der explizit vorschlÃ¤gt, wie dieser Konflikt gelÃ¶st werden soll (z. B. Zusammenlegung von Skills oder Definition strikter Grenzen). Ausnahme: Wenn die Ãœberlappung sinnvoll und gerechtfertigt ist, rate stattdessen dazu, explizite Regeln aufzustellen, wann welcher Skill getriggert werden soll, oder den Nutzer jedes Mal fragen zu lassen.
-5. Speichere die `ECOSYSTEM.md` mit dem Tool `write_to_file` im `skills/`-Verzeichnis ab. Stoppe hier.
 
 ### Phase 1: Das Interview (Modus A/B/E)
 Stelle im sokratischen Dialog die fehlenden Antworten der folgenden 10 Metriken fest. (Frage in Clustern, um zu lange Prompts zu umgehen):
@@ -97,9 +91,18 @@ Stelle im sokratischen Dialog die fehlenden Antworten der folgenden 10 Metriken 
 1. Fasse nach dem Interview die essenzielle Mechanik in 3-5 SÃ¤tzen zusammen.
 2. Zwingendes **VETO**: Finde eine gefÃ¤hrliche Schwachstelle ("Ich sehe ein Risiko bei X, weil Y. Sollen wir Z tun?") und warte auf Nutzer-BestÃ¤tigung.
 
+### Phase 2.5: Dialektische Validierung (Red Teaming)
+Bevor der Skill physisch generiert wird, musst du den vorgeschlagenen Workflow einem "Adversarial Build"-Test unterziehen:
+1. **Edge-Cases (Grenzbereiche):** Was passiert bei unvollstÃ¤ndigen Payloads (z.B. API meldet 'Success', aber Daten sind leer)?
+2. **Runtime-WidersprÃ¼che:** Gibt es logische Fehler wie z.B. einen zustandslosen (stateless) Skill, der versehentlich Artefakte im Cache erwartet?
+3. **Zirkelschluss-Logik:** Verhindere Endlosschleifen in der Fehlerbehandlung.
+4. **Plattform-Constraints:** Verletzen die Regeln die Sicherheitsrichtlinien der IDE (Antigravity) oder sind die Tools fÃ¼r Claude/MCP nicht "wasserdicht" genug beschrieben, was zu Halluzinationen bei der Tool-Wahl fÃ¼hren kÃ¶nnte?
+*PrÃ¤sentiere dem Nutzer kurz deine Red-Team-Findings und passe den Strategie-Vorschlag entsprechend an, um den Skill robuster zu machen.*
+
 ### Phase 3: Skill Output
-1. Generiere die Architektur fÃ¼r das gesamte Skill-Paket: Gib zuerst die Struktur aus (Verzeichnisse fÃ¼r `references/`, `scripts/`) und erzeuge danach die Ausgabedateien. VerknÃ¼pfe alle Dateien zwingend Ã¼ber saubere, funktionierende **relative Markdown-Links** (z.B. `[Regelwerk](references/rules.md)`), um das Paket als in sich geschlossenes Konstrukt (Portable Skill) zu wahren. Nutze [Reference Templates](references/reference-templates.md) fÃ¼r das Scaffolding von Reference-Dateien.
-2. Strukturiere JEDEN komplexen Skill nach exakt deinen eigenen XML-Regularien:
+1. Generiere die Architektur fÃ¼r das gesamte Skill-Paket: Gib zuerst die Struktur aus (Verzeichnisse fÃ¼r `references/`, `scripts/`, `tests/` oder `evals/` fÃ¼r Test-Driven Skill Development) und erzeuge danach die Ausgabedateien. VerknÃ¼pfe alle Dateien zwingend Ã¼ber saubere, funktionierende **relative Markdown-Links** (z.B. `[Regelwerk](references/rules.md)`), um das Paket als in sich geschlossenes Konstrukt (Portable Skill) zu wahren. Nutze [Reference Templates](references/reference-templates.md) fÃ¼r das Scaffolding von Reference-Dateien.
+2. **Test-Driven Skill Development (TSD):** Lege zwingend eine Test-Matrix oder Test-Szenarien im `tests/`-Ordner an. Entwirf dabei explizit **"Toxic Inputs"** (z.B. massiv Ã¼berlange Strings, kaputte JSON-Strukturen, Race Conditions), um die Robustheit der Fehlerbehandlung zu garantieren. Ein Skill gilt erst als produktionsbereit, wenn seine Randbedingungen (Edge-Cases) definiert und testbar sind.
+3. Strukturiere JEDEN komplexen Skill nach exakt deinen eigenen XML-Regularien:
    - YAML Frontmatter (Name, Description)
    - `## Use this skill when / Do not use...`
    - `## <role_definition>`
@@ -122,11 +125,12 @@ Stelle im sokratischen Dialog die fehlenden Antworten der folgenden 10 Metriken 
 PrÃ¼fe vor oder mit der Auslieferung dein eigenes erstelltes Produkt:
 - Keine Adjektive ohne Mechanik?
 - Ist ein konkretes Output-Beispiel im Skill enthalten?
-- Ist das Plattform-Triggering in der `description` prÃ¤zise genug definiert?
+- Ist das Plattform-Triggering in der `description` prÃ¤zise genug definiert (besonders fÃ¼r Antigravity `skill.yaml` / Claude MCP Tool-Beschreibungen)?
 - Wurden externe AbhÃ¤ngigkeiten und genannte Personen/Frameworks real verifiziert? *(Nutze hierfÃ¼r die [anti-hallucination-checklist.md](references/anti-hallucination-checklist.md))*
 - **Ã–kosystem-Integration:** Werden Teilaufgaben korrekt an spezialisierte Nachbar-Skills delegiert, statt alles monolithisch zu lÃ¶sen? EnthÃ¤lt die Delegation sowohl ein Briefing-Format als auch ein erwartetes RÃ¼ckgabe-Format?
 - **Referenz-QualitÃ¤t:** Ist jede Reference-Datei eigenstÃ¤ndig nutzbar und unter 200 Zeilen? Enthalten dynamische Referenzen (Living Documents) ein Datum, Pflegeregeln und Status-Tracking?
 - **Diagramm-QualitÃ¤t:** Werden EntscheidungsbÃ¤ume mit â‰¥3 Verzweigungen als Mermaid-Diagramme (nicht ASCII-Art) gerendert, fÃ¼r duale Lesbarkeit (User-Rendering + LLM-Parsing)?
+- **Testabdeckung:** Sind die in Phase 2.5 gefundenen Edge-Cases durch Dateien im `tests/` Ordner abgedeckt?
 
 ## <output_standards>
 - Wenn externe Dateien existieren, NUTZE in der generierten SKILL.md zwingend konkretes Markdown-Linking (z.B. "Siehe [API.md](references/api_docs.md) fÃ¼r Endpunkte").
