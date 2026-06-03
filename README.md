@@ -1,6 +1,6 @@
 # Skill-Engineer: Architecture & Core Mechanics
 
-**Version:** 4.5 (Dependency-Aware Quality Gate, Path Portability, 10-Criterion Quality Gate)
+**Version:** 4.0 (Ecosystem-Aware Design, Cross-Skill Delegation, Mermaid Decision Trees)
 
 🇩🇪 [Lies dies auf Deutsch](README.de.md)
 
@@ -39,20 +39,6 @@ Before the agent starts generating, it performs a two-step analysis:
 
 ---
 
-## 2b. Dependency System *(New in v4.5)*
-Skills can declare other skills as dependencies:
-
-```yaml
-requires:
-  - brand-guidelines
-```
-
-* **WARNING, not abort:** If a dependency is missing, the Skill-Engineer emits a warning. No hard stop — skills are often usable without their optional sub-skills.
-* **Relative paths as standard:** Skill-to-skill references always use relative paths (`../skill-name/references/`). Absolute paths and workspace-specific paths (`.agents/...`) are a Quality Gate blocker.
-* **Quality Gate Criterion #10:** Automatically checks whether declared dependencies are correctly listed in the frontmatter and whether an environment check with WARNING exists in the workflow.
-
----
-
 ## 3. The 5 Operating Modes (Input Routing)
 If there is no duplication issue (or the user explicitly requests a rebuild), the intelligent routing takes over:
 
@@ -83,8 +69,8 @@ Example: The `google-ads-manager` skill delegates copywriting to `ad-expert` and
 
 ---
 
-## 5. The 10-Point Quality Gate *(Expanded in v4.5)*
-Before the Skill-Engineer releases a target skill, it checks it against 10 criteria:
+## 5. The 13-Point Quality Gate *(Expanded in v4.0)*
+Before the Skill-Engineer releases a target skill, it silently forces it through this checklist (13 maximum points across 4 categories):
 
 ### A. Architectural Purity (0–3 Points)
 1. Native XML-Tags (no prose instructions)

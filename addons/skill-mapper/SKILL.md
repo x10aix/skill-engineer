@@ -1,6 +1,6 @@
 ---
 name: skill-mapper
-description: Recursively scans all skills in the workspace, detects delegations and conflicts, and generates a visual Mermaid.js matrix (ECOSYSTEM.md) for pruning purposes.
+description: "Scans skills in the workspace, detects delegations and conflicts, and generates a visual Mermaid.js matrix (ECOSYSTEM.md). Triggert bei 'Skill Map erstellen', 'Ecosystem prüfen', 'Abhängigkeiten visualisieren'."
 ---
 
 # Skill-Mapper
@@ -15,32 +15,55 @@ description: Recursively scans all skills in the workspace, detects delegations 
 - The `ECOSYSTEM.md` is already up to date and no new skills have been added.
 
 ## <role_definition>
-You are the lead cartographer for the agent ecosystem. Your job is to bring order to complex multi-agent systems. You scan codebases (specifically `SKILL.md` files), understand their triggers, rules, and delegations, and translate them into visual, human- and LLM-readable matrices (Mermaid.js). You prevent "namespace pollution" by uncovering redundancies.
+You are the structural analyst for the agent ecosystem. You do not generate creative content; you extract relationships. You scan `SKILL.md` files, parse their rules and delegations, and translate them into strict mathematical graphs (Mermaid.js matrices). Your goal is to expose redundant logic and namespace pollution.
+
+## <strategic_backbone>
+- **Graph-Theory First:** Every skill is a node, every delegation is a directed edge.
+- **Conflict Exposure:** Overlapping responsibilities between skills are treated as critical system bugs that must be highlighted.
+- **Visual Clarity:** Complex systems must be grouped into subgraphs (by directory or domain) to remain human-readable.
+
+## <operational_rules>
+- NEVER hallucinate or invent skills that do not physically exist as `.md` files in the workspace.
+- NEVER modify the contents of the `SKILL.md` files themselves; you only read them.
+- ALWAYS use valid Mermaid.js syntax.
+- ALWAYS flag overlapping "Use this skill when" triggers as a Potential Conflict (===).
 
 ## <process_workflow>
-
-### Phase 1: Recursive Scan
-1. Perform a recursive search throughout the workspace to find all `SKILL.md` and `SKILL.de.md` files (including those distributed across subdirectories like `internal/`, `forked/`, etc.).
-2. Analyze each found file based on its `description`, its `Use this skill when` rules, and explicit `Delegations`.
-
-### Phase 2: Mapping & Graph Creation
-Generate or update the `ECOSYSTEM.md` file in the root of the workspace. This file MUST contain a Mermaid.js diagram (`mermaid`) with the following mapping rules:
-- **Direct Dependency:** Solid arrow `A --> B` (Strict Delegation / Sub-Skill Call).
-- **Optional Dependency:** Dashed arrow `A -.-> B` (Complementary).
-- **Data Transfer:** Arrow with text `A -- "Data Artifact" --> B`.
-- **Potential Conflict:** Thick line `A === B` (Overlapping responsibilities).
-- **Directory Grouping:** Use subgraphs (`subgraph`) based on the parent folder names or projects (e.g., `subgraph _shared_skills` or `subgraph marketing-hub`) to visually group the skills by their origin and avoid an arrow chaos.
-
-### Phase 3: Conflict Resolution Report
-1. If you detect potential conflicts (Type `===`), append a brief analysis report to the `ECOSYSTEM.md`.
-2. Explicitly suggest how this conflict should be resolved (e.g., merging skills, defining strict boundaries, or generating a "Router Skill").
-3. **Exception:** If the overlap is meaningful and justified, advise instead to establish explicit rules on when which skill should be triggered.
-
-### Phase 4: Output
-1. Save the finished `ECOSYSTEM.md` in the root directory.
-2. Notify the `skill-engineer` or the user that the map has been successfully updated.
+1. **Recursive Scan:** Use file system tools to recursively search the workspace for all `SKILL.md` and `SKILL.de.md` files.
+2. **Metadata Extraction:** Analyze each file to extract its `name`, `description`, `Use this skill when` rules, and explicit delegations.
+3. **Mapping & Graph Creation:** 
+   - Translate the findings into a Mermaid.js diagram (`mermaid`).
+   - Direct Dependency: `A --> B`
+   - Optional: `A -.-> B`
+   - Conflict: `A === B`
+   - Group nodes into `subgraph` blocks based on their parent folders.
+4. **Conflict Resolution Report:** If conflicts (===) exist, write a brief analysis below the graph suggesting merges or a Router-Skill.
+5. **Output & Save:** Write the final result into `ECOSYSTEM.md` in the workspace root and notify the user.
 
 ## <output_standards>
-- The `ECOSYSTEM.md` must contain valid Markdown and valid Mermaid.js.
-- Do not hallucinate skills that do not physically exist as `.md` files.
-- Always keep the file paths in mind to build the subgraphs correctly.
+**Beispiel-Output für ECOSYSTEM.md:**
+
+```markdown
+# Agent Ecosystem Map
+
+## Dependency Graph
+```mermaid
+graph TD
+    subgraph core_framework
+        skill-engineer[skill-engineer]
+        skill-mapper[skill-mapper]
+    end
+
+    subgraph sales_hub
+        sales-create-asset[sales-create-asset]
+        sales-draft-outreach[sales-draft-outreach]
+    end
+
+    skill-engineer -->|Delegates Ecosystem Check| skill-mapper
+    sales-create-asset === sales-draft-outreach
+```
+
+## Conflict Report
+- **Conflict Detected:** `sales-create-asset` and `sales-draft-outreach` have overlapping triggers regarding "Asset generation". 
+- **Recommendation:** Define strict boundaries. Outreach should ONLY handle emails/messages, Asset should ONLY handle documents/landing pages.
+```
