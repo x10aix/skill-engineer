@@ -4,6 +4,21 @@ This document tracks the structured version history of the Skill-Engineer based 
 
 ---
 
+### [Latest] June 3, 2026
+**Version 4.5 — "Dependency-Aware Quality Gate" Update**
+
+* `tbd` - **feat**: **Dependency System** — Skills can now declare `requires:` in the YAML frontmatter. The Skill-Engineer emits a WARNING when a dependency is missing — no hard abort, as skills can remain useful without their optional sub-skills.
+* `tbd` - **feat**: **Quality Gate Criterion #10 (Dependency-Check)** — New mandatory criterion: checks whether external file or skill references are declared in `requires:`, and whether `<process_workflow>` Step 1 includes an environment check with WARNING (not abort).
+* `tbd` - **feat**: **Path Portability as Blocker (Anti-Hall #6)** — New rule in the Anti-Hallucination Checklist: absolute paths (`C:\...`) and workspace-specific paths (`.agents/...`) inside skill instructions are a blocker and must be replaced with relative paths plus a `requires:` declaration.
+* `tbd` - **fix**: **Criterion #2 bullet-proof** — The "Mechanic over Adjectives" rule now defines the class of forbidden words ("any word that could be removed without changing the agent's actual behavior") instead of listing specific example words.
+* `tbd` - **fix**: **Framework Verification clarified** — Well-established models (AIDA, SWOT, OKR, MECE) are considered pre-verified. Only niche or person-specific frameworks require research and user confirmation.
+* `tbd` - **fix**: **Filesystem Conditional** — `write_to_file` in Step 0 now has an explicit fallback for platforms without filesystem access: output configuration as a code block for manual creation.
+* `tbd` - **fix**: **Stale Criterion Count** — Reference to "8 criteria" in Step C1 corrected to 10.
+* `tbd` - **docs**: **External Example** — Added `examples/example-skill-creation.md`: a complete Mode B session from user request to finished SKILL.md including Quality Gate results. Additional examples can be added.
+* `tbd` - **fix**: **brand-enforcement** — Replaced hardcoded `.agents/brand/guidelines.md` path with relative `../brand-guidelines/references/` paths. Declared `requires: [brand-guidelines]` in frontmatter.
+
+---
+
 ### [Latest] May 13, 2026
 **Version 4.4 — „Agent Economy 2026" Update**
 

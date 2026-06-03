@@ -4,6 +4,21 @@ Dieses Dokument verfolgt den strukturierten Versionsverlauf des Skill-Engineers 
 
 ---
 
+### [Latest] June 3, 2026
+**Version 4.5 — "Dependency-Aware Quality Gate" Update**
+
+* `tbd` - **feat**: **Dependency System** — Skills können jetzt `requires:` im YAML-Frontmatter deklarieren. Der Skill-Engineer gibt eine WARNING aus, wenn eine Dependency fehlt — kein harter Abbruch, da Skills auch ohne Sub-Skills nutzbar sein können.
+* `tbd` - **feat**: **Quality Gate Kriterium #10 (Dependency-Check)** — Neues Pflicht-Kriterium im Qualitätsgate: Prüft, ob externe Datei- oder Skill-Referenzen im `requires:`-Feld deklariert sind und ob `<process_workflow>` Schritt 1 einen Environment Check mit WARNING enthält.
+* `tbd` - **feat**: **Pfad-Portabilität als Blocker (Anti-Hall #6)** — Neue Prüfregel in der Anti-Halluzinations-Checkliste: Absolute Pfade (`C:\...`) und workspace-spezifische Pfade (`.agents/...`) in Skill-Instruktionen sind ein Blocker und müssen durch relative Pfade ersetzt werden.
+* `tbd` - **fix**: **Kriterium #2 bullet-proof** — Die "Mechanik statt Adjektive"-Regel definiert jetzt die Klasse der verbotenen Wörter ("jedes Wort, das man weglassen könnte, ohne das Verhalten zu ändern") statt nur Beispielwörter aufzulisten.
+* `tbd` - **fix**: **Framework-Verifikation präzisiert** — Etablierte Modelle (AIDA, SWOT, OKR, MECE) gelten als verifiziert. Nur nischige oder personenbezogene Frameworks benötigen Recherche und Nutzer-Bestätigung.
+* `tbd` - **fix**: **Filesystem-Conditional** — `write_to_file` in Schritt 0 hat jetzt einen expliziten Fallback für Plattformen ohne Filesystem-Zugriff: Konfiguration als Code-Block ausgeben.
+* `tbd` - **fix**: **Stale Criterion Count** — Referenz auf "8 Kriterien" in Schritt C1 auf 10 korrigiert.
+* `tbd` - **docs**: **Externes Beispiel** — `examples/example-skill-creation.md` hinzugefügt: vollständige Session (Modus B) von der Nutzer-Anfrage bis zur fertigen SKILL.md inkl. Qualitätsgate-Ergebnis. Weitere Beispiele können ergänzt werden.
+* `tbd` - **fix**: **brand-enforcement** — Hardcodierter `.agents/brand/guidelines.md`-Pfad durch relative `../brand-guidelines/references/`-Pfade ersetzt. `requires: [brand-guidelines]` im Frontmatter deklariert.
+
+---
+
 ### [Latest] May 13, 2026
 **Version 4.4 — „Agent Economy 2026" Update**
 
