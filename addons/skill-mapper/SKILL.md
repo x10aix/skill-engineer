@@ -30,7 +30,7 @@ You are the structural analyst for the agent ecosystem. You do not generate crea
 
 ## <process_workflow>
 1. **Recursive Scan:** Use file system tools to recursively search the workspace for all `SKILL.md` and `SKILL.de.md` files.
-2. **Metadata Extraction:** Analyze each file to extract its `name`, `description`, `Use this skill when` rules, and explicit delegations.
+2. **Metadata Extraction:** Analyze each file to extract its `name`, `description`, `Use this skill when` rules, explicit delegations, and `requires:` from the YAML frontmatter. Each entry under `requires:` is treated as a directed dependency edge (`A --> B`) in the graph.
 3. **Mapping & Graph Creation:** 
    - Translate the findings into a Mermaid.js diagram (`mermaid`).
    - Direct Dependency: `A --> B`
