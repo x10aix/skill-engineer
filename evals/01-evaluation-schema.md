@@ -1,35 +1,45 @@
 # Skill Engineer: Evaluation Schema (Benchmarks)
 
-Um die operative Reife des `skill-engineer` messbar zu machen, dient dieses 10-Punkte Bewertungsschema. Jeder durch den Engineer generierte oder auditierte Ziel-Skill muss gegen dieses Raster getestet werden (Regression Test).
+> [!NOTE]
+> Das kanonische Scoring-Schema (17 Punkte, Version 2.0) liegt in:
+> `skills/core/internal/skill-benchmarker/references/scoring-schema.md`
+>
+> Dieses Dokument enthält das Regression-Test-Protokoll und verweist auf das Schema.
+> Der `skill-benchmarker` liest das Schema direkt aus seiner `references/`-Datei.
 
-## Scoring-Matrix (Maximal 13 Punkte)
+Letztes Update: 2026-06-21 | Schema-Version: 2.0 (17 Punkte)
 
-### A. Architektonische Reinheit (0 - 3 Punkte)
-- **[1 Punkt] Native XML-Tags:** Nutzt der Ziel-Skill `<operational_rules>` oder ähnliche harte Trenner statt Prosa-Anweisungen?
-- **[1 Punkt] Mechanik statt Adjektive:** Ist die Persona frei von "Du bist ein hilfreicher Assistent" und nutzt stattdessen Handlungsdirektiven ("Zweifle jede Aussage an")?
-- **[1 Punkt] Plattform-Agnostik:** Ist das Format neutral genug, um sowohl z.B. in Antigravity als auch in Cursor geladen zu werden (YAML-Frontmatter)?
+---
 
-### B. Anti-Halluzination & Sicherheit (0 - 4 Punkte)
-- **[1 Punkt] Environment Check:** Zwingt der Skill den Agenten, seine Tools (z.B. Dateisystem, Web-Search) in Schritt 1 zu verifizieren?
-- **[1 Punkt] Self-Correction:** Ist ein zwingender `Chain-of-Thought` (z.B. `<self_audit>`) vor der finalen Ausgabe eingebaut?
-- **[1 Punkt] Harte Tabus:** Gibt es eine explizite Verbotsliste ("Darf niemals X tun")?
-- **[1 Punkt] Referenz-Warnung:** Sind unerprobte Frameworks oder Personen mit `<!-- UNBESTÄTIGT -->` markiert?
+## Scoring-Übersicht (17 Punkte)
 
-### C. Developer Experience (0 - 3 Punkte)
-- **[1 Punkt] Zero-Shot Triggering:** Ist die `description` des Skills so scharf, dass die IDE ihn im richtigen Moment automatisch lädt, ohne False-Positives auszulösen?
-- **[1 Punkt] Few-Shot Beispiel:** Enthält der Skill ein konkretes Vorher/Nachher-Input-Beispiel für das LLM?
-- **[1 Punkt] Stateful / Stateless Korrektheit:** Wurde für einen trivialen Werkzeug-Skill auf eine Setup-Phase verzichtet (Stateless), oder wurde ein komplexer Meta-Agent korrekt mit einem `STATUS: UNCONFIGURED` Block (Stateful) versehen?
+| Dim | Kategorie | Max | Neu in v2.0 |
+|---|---|---|---|
+| A | Architektonische Reinheit | 3 | — |
+| B | Anti-Halluzination & Faktentreue | 4 | Umbenannt |
+| C | Developer Experience | 3 | — |
+| D | Ökosystem & Wartbarkeit | 3 | — |
+| **E** | **Discoverability** | **2** | ✅ Neu |
+| **F** | **Security** | **2** | ✅ Neu (mit -1 Straf-Punkt) |
+| | **Gesamt** | **17** | |
 
-### D. Ökosystem-Integration & Wartbarkeit (0 - 3 Punkte)
-- **[1 Punkt] Cross-Skill-Delegation:** Werden Teilaufgaben an spezialisierte Nachbar-Skills delegiert (mit Briefing- und Rückgabeformat), statt alles monolithisch zu lösen?
-- **[1 Punkt] Reference-Schnitt:** Ist jede Reference-Datei eigenständig nutzbar und nicht >200 Zeilen? Werden Mermaid-Diagramme (statt ASCII) für Entscheidungsbäume mit ≥3 Verzweigungen verwendet?
-- **[1 Punkt] Update-Fähigkeit:** Enthalten dynamische Reference-Dateien (Listen, Inventare, Logs) ein Aktualisierungsdatum, Pflegeregeln und Status-Tracking (✅/⏳/🔲)?
+Details zu jedem Kriterium → `skills/core/internal/skill-benchmarker/references/scoring-schema.md`
+
+### Wichtige Regeln (Kurzfassung)
+- **0-Punkte-Warnung:** Jede Dimension mit 0 Punkten → ⚠️ WARNING (automatisch)
+- **Security = 0:** → 🚨 CRITICAL (Skill darf nicht published werden)
+- **Security = -1:** Gefährliches Verhalten erkannt → 🚨 CRITICAL + Straf-Punkt
+- **PASS-Schwelle:** ≥ 14/17, kein CRITICAL, kein Security = 0
 
 ---
 
 ## Regression-Test Protokoll
-Wann immer das `SKILL.md` Template im Repository geupdatet wird, müssen vier Benchmark-Skills neu generiert und bewertet werden:
-1. Ein trivialer Converter (CSV zu JSON) -> Muss Modus D triggern (Erwarteter Score: 9/13, da Stateful und Delegation = N/A).
-2. Ein komplexer Fach-Agent (z.B. Brand-Voice) -> Muss Modus A triggern (Erwarteter Score: 13/13).
-3. Ein Audit eines fehlerhaften Alt-Skills -> Muss Modus C triggern und fehlende Anti-Halluzination erkennen.
-4. Ein Skill aus Legacy-Dokument (z.B. Strategiepapier) -> Muss Modus E triggern und korrekt in die SKILL.md-Architektur übersetzen.
+
+Wann immer das `SKILL.md`-Template des `skill-engineer` geupdatet wird, müssen diese vier Szenarien mit dem `skill-benchmarker` neu bewertet werden:
+
+| # | Skill-Typ | Erwarteter Modus | Erwarteter Score |
+|---|---|---|---|
+| 1 | Trivialer Converter (CSV → JSON) | Modus D | ≥ 12/17 (D.1 + E.2 als N/A) |
+| 2 | Komplexer Fach-Agent (z.B. Brand-Voice) | Modus A | ≥ 15/17 |
+| 3 | Fehlerhafter Alt-Skill (fehlendes Anti-Halluzinations-System) | Modus C-Audit | B: 0–1 Pkt → ⚠️ WARNING |
+| 4 | Skill mit hardcodierten absoluten Pfaden | Modus C-Audit | A: Verlust 1 Pkt, F prüfen |

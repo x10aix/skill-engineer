@@ -1,6 +1,6 @@
 # Skill-Engineer: Architektur & Funktionsweise
 
-**Version:** 4.0 (Ecosystem-Aware Design, Cross-Skill Delegation, Mermaid-Entscheidungsbäume)
+**Version:** 4.5 (Dependency-Aware Quality Gate, Pfad-Portabilität, 10-Punkte-Qualitätsgate)
 
 🇬🇧 [Read in English](README.md)
 
@@ -39,6 +39,20 @@ Bevor der Agent mit der Generierung beginnt, führt er eine zweistufige Analyse 
 
 ---
 
+## 2b. Dependency System *(Neu in v4.5)*
+Skills können andere Skills als Abhängigkeit deklarieren:
+
+```yaml
+requires:
+  - brand-guidelines
+```
+
+* **WARNING statt Abbruch:** Fehlt eine Dependency, gibt der Skill-Engineer eine Warnung aus. Kein harter Abbruch — Skills sind häufig auch ohne Sub-Skills grundlegend nutzbar.
+* **Relative Pfade als Standard:** Skill-zu-Skill Referenzen nutzen immer relative Pfade (`../skill-name/references/`). Absolute Pfade und workspace-spezifische Pfade (`.agents/...`) sind ein Qualitätsgate-Blocker.
+* **Qualitätsgate Kriterium #10:** Prüft automatisch, ob deklarierte Dependencies korrekt im Frontmatter eingetragen sind und ob ein Environment Check mit WARNING im Workflow vorhanden ist.
+
+---
+
 ## 3. Die 5 Betriebs-Modi (Input-Routing)
 Gibt es kein Dedup-Problem (oder der Nutzer wünscht explizit einen Neubau), greift das intelligente Routing:
 
@@ -69,8 +83,8 @@ Beispiel: Der `google-ads-manager` Skill delegiert Copywriting an `ad-expert` un
 
 ---
 
-## 5. Das 13-Punkte-Qualitätsgate *(Erweitert in v4.0)*
-Bevor der Skill-Engineer einen Ziel-Skill herausgibt, jagt er ihn durch diese Checkliste (maximal 13 Punkte in 4 Kategorien):
+## 5. Das 10-Punkte-Qualitätsgate *(Erweitert in v4.5)*
+Bevor der Skill-Engineer einen Ziel-Skill herausgibt, prüft er ihn gegen 10 Kriterien:
 
 ### A. Architektonische Reinheit (0–3 Punkte)
 1. Native XML-Tags (keine Prosa-Anweisungen)
